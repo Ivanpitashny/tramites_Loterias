@@ -6,7 +6,8 @@ para usar la apliacacion acordarse de instalar todas las dependendcias
 # para instalar las dependencias para la web 
 npx expo install react-dom react-native-web @expo/metro-runtime -- --legacy-peer-deps
 
-# para instalar la libreria de componentes si es que lo solicita, puede dar error, utilizar la qe recomienda la terminal
+# para instalar la libreria de componentes
+si es que lo solicita utilizar el codigo de abajo, este codigo puede dar error, si lo da utilizar el que recomienda la terminal
 npx expo install react-native-paper react-native-vector-icons react-native-safe-area-context --legacy-peer-deps
 
 # Para Iniciar el proyecto 
