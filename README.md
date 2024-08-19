@@ -4,6 +4,8 @@ Aplicacion movil para iniciar tramites y verificarlos
 para usar la apliacacion acordarse de instalar todas las dependendcias
 
 # para instalar las dependencias para la web 
+anteriormente instalar node 20.16.0 y npm 10.8.2
+instalar npm install expo --legacy-peer-deps
 npx expo install react-dom react-native-web @expo/metro-runtime -- --legacy-peer-deps
 
 # para instalar la libreria de componentes
