@@ -25,3 +25,21 @@ descargar java 17 y maven 3.9.x
 para descargar java ir a https://www.oracle.com/ar/java/technologies/downloads/#jdk17-windows
 descargar maven https://maven.apache.org/download.cgi
 para al maven hay que realizar una instalacion de paths
+
+#Codigos git
+-para crear una nueva rama
+ git checkout main
+ git pull //actualiza el proyecto
+ git checkout -b "nombre_de _tarea-Iniciales de cada uno"
+
+-una vez solucionado el problema
+  git add . //agrega las modificaciones
+  git commit -m "descripcion de lo que se hizo"
+  git push origin ramaCreada // para subir las modificaciones
+  git checkout main //vuelve a la rama principal
+  git pull //actualizamos el proyecto de nuevo
+  git merge --no-f origin/ramaCreada  //merge de la rama
+
+  git add .
+  git commit -m "merge ramaCreada"
+  git push origin main
