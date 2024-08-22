@@ -1,7 +1,7 @@
 # tramites_Loterias
 Aplicacion movil para iniciar tramites y verificarlos
 
-para usar la apliacacion acordarse de instalar todas las dependendcias
+#para usar la apliacacion acordarse de instalar todas las dependendcias
 
 # para instalar las dependencias para la web 
 anteriormente instalar node 20.16.0 y npm 10.8.2
@@ -19,3 +19,9 @@ npx expo install react-native-paper react-native-vector-icons react-native-safe-
 
 # para recargar el proyecto 
 si no se reproducieron los cambios pulsar la letra r y reiniciara e proyecto
+
+##Para modificar el back y correrlo
+descargar java 17 y maven 3.9.x
+para descargar java ir a https://www.oracle.com/ar/java/technologies/downloads/#jdk17-windows
+descargar maven https://maven.apache.org/download.cgi
+para al maven hay que realizar una instalacion de paths
