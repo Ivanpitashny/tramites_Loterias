@@ -42,6 +42,3 @@ CREATE TABLE Historial_Actividades(
 );
 
 
-INSERT INTO rol (r_nombre) VALUES ("Administrador");
-INSERT INTO usuario (usr_nombre, usr_apellido, usr_mail, usr_telefono, r_id) VALUES
-("Lourdes","Giolongo","lourdes@mail", 34324,1);
