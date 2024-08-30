@@ -43,3 +43,11 @@ para al maven hay que realizar una instalacion de paths
   git add .
   git commit -m "merge ramaCreada"
   git push origin main
+
+
+
+React Navigation
+
+npm install @react-navigation/native @react-navigation/stack
+npm install react-native-gesture-handler react-native-reanimated
+npm install react-native-vector-icons
