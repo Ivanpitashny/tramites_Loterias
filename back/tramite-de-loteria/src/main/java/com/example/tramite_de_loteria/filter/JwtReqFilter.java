@@ -32,6 +32,7 @@ public class JwtReqFilter extends OncePerRequestFilter{
             throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
+        System.out.println("Authorization Header: " + authorizationHeader); // Log para el encabezado de autorización
 
         String username = null;
         String jwt = null;
@@ -39,21 +40,36 @@ public class JwtReqFilter extends OncePerRequestFilter{
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtService.extractUsername(jwt);
-        }
 
+            // Logs para verificar el token y el nombre de usuario
+            System.out.println("JWT Token: " + jwt);
+            System.out.println("Extracted Username: " + username);
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
+            // Log para verificar los detalles del usuario
+            System.out.println("User Details: " + userDetails);
+
             if (jwtService.validateToken(jwt, userDetails)) {
+
+                // Log para verificar la validez del token
+                System.out.println("Token is valid");
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } else {
+                // Log para cuando el token no es válido
+                System.out.println("Token is invalid");
             }
         }
+
+        // Continuar con la cadena de filtros
         chain.doFilter(request, response);
     }
+
 }

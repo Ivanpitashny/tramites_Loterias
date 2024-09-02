@@ -2,6 +2,8 @@ package com.example.tramite_de_loteria.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,23 +13,24 @@ import jakarta.persistence.Table;
 @Table(name = "Rol")
 public class Rol {
 
-    public Rol(){
-        super();
-    }
-
-    public Rol(Integer id, String nombre){
-        this.id = id;
-        this.nombre = nombre;
-    }
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "r_id")
     private Integer id;
 
-    @Column(name = "r_nombre")
-    private String nombre;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "r_nombre", unique = true)
+    private RolNombre nombre;
 
+    // Constructor por defecto
+    public Rol() {}
+
+    // Constructor con parámetros
+    public Rol(RolNombre nombre) {
+        this.nombre = nombre;
+    }
+
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -36,11 +39,11 @@ public class Rol {
         this.id = id;
     }
 
-    public String getNombre() {
+    public RolNombre getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public void setNombre(RolNombre nombre) {
         this.nombre = nombre;
     }
 

@@ -1,17 +1,14 @@
 package com.example.tramite_de_loteria.response;
 
 public class TokenResponse {
-    private String jwToken;
+    private String token;
 
-	public TokenResponse(String jwToken) {
-		this.jwToken = jwToken;
-	}
+    public TokenResponse(String token) {
+        this.token = token;
+    }
 
-	public String getJwToken() {
-		return jwToken;
-	}
-
-	public void setJwToken(String jwToken) {
-		this.jwToken = jwToken;
-	}
+    // Getter
+    public String getToken() {
+        return token;
+    }
 }

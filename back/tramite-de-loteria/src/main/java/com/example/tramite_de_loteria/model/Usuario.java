@@ -1,46 +1,69 @@
 package com.example.tramite_de_loteria.model;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Usuario")
-public class Usuario {
-    public Usuario(){
-        super();
-    }
-
-    public Usuario(Integer id, String nombre, String apellido, Integer telefono, String mail, Integer rolId){
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.telefono = telefono;
-        this.mail = mail;
-        this.rolId = rolId;
-    }
-
+public class Usuario implements UserDetails{
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usr_id")
     private Integer id;
 
     @Column(name = "usr_nombre")
     private String nombre;
+
     @Column(name = "usr_apellido")
     private String apellido;
+
     @Column(name = "usr_telefono")
     private Integer telefono;
+
     @Column(name = "usr_mail")
     private String mail;
 
-    @Column(name = "r_id")
-    private Integer rolId;
+    @Column(name = "usr_usuario", unique = true)
+    private String username;
 
+    @Column(name = "usr_contrasenia")
+    private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "r_rol", referencedColumnName = "r_id")
+    private Rol rol;
+
+    // Constructor por defecto
+    public Usuario() {
+        super();
+    }
+
+    // Constructor con parámetros
+    public Usuario(Integer id, String nombre, String apellido, Integer telefono, String mail, Rol rol, String username, String password) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.telefono = telefono;
+        this.mail = mail;
+        this.rol = rol;
+        this.username = username;
+        this.password = password;
+    }
+
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -81,13 +104,48 @@ public class Usuario {
         this.mail = mail;
     }
 
-    public Integer getRolId() {
-        return rolId;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setRolId(Integer rolId) {
-        this.rolId = rolId;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol.getNombre().name()));
+    }
+
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
     
 }
