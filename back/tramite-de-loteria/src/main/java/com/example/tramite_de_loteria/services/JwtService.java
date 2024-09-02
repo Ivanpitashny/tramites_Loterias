@@ -13,10 +13,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-
 @Service
 public class JwtService {
-    private static final String JWT_SECRET_KEY = "ecommerce";
+	
+	  private static final String JWT_SECRET_KEY = "ecommerce";
 
 	  public static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 60 * (long) 1; // 1 hora
 
@@ -65,3 +65,5 @@ public class JwtService {
 	  }
 
 }
+
+
