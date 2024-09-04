@@ -55,6 +55,8 @@ public class JwtReqFilter extends OncePerRequestFilter{
 
             if (jwtService.validateToken(jwt, userDetails)) {
 
+                System.out.println("User Authorities: " + userDetails.getAuthorities());
+
                 // Log para verificar la validez del token
                 System.out.println("Token is valid");
 

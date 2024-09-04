@@ -44,7 +44,8 @@ CREATE TABLE Historial_Actividades(
 
 INSERT INTO users (id, username, password , nombre, apellido, mail, telefono, enabled) 
 VALUES 
-(1,'lgiolongo','123','lourdes', 'giolongo', 'lgiolongo@mail', '3423432', 1);
+(1,'lgiolongo','{bcrypt}$2a$12$FM6tLScFT4xtStWBSMUIwucLYfSRiq42cj16/hqo3nqS7EumcEy0C
+','lourdes', 'giolongo', 'lgiolongo@mail', '3423432', 1);
 
 
 INSERT INTO authorities 

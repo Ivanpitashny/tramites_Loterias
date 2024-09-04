@@ -37,15 +37,14 @@ public class ConfigSecurity {
         
         http.authorizeHttpRequests( configure -> {
             configure
-                .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasRole("Administrador")
-                .requestMatchers("/v1/usuarios", "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
+            .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasRole("ADMINISTRADOR")                
+            .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })
         .addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement( (session) -> session 
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
         http.httpBasic(Customizer.withDefaults());
-        
         http.csrf( csrf -> csrf.disable());
         
         return http.build();

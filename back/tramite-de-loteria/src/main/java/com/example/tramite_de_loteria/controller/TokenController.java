@@ -36,6 +36,5 @@ public class TokenController {
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsuario());
 		final String jwt = jwtService.generateToken(userDetails);
 		return ResponseEntity.ok(new TokenResponse(jwt));
-		
 	}
 }
