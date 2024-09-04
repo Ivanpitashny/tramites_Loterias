@@ -3,16 +3,17 @@ package com.example.tramite_de_loteria.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tramite_de_loteria.model.Tramite;
 import com.example.tramite_de_loteria.repository.TramiteRepository;
-import org.springframework.web.bind.annotation.GetMapping;
 
-
+@CrossOrigin(origins = {"*"})
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/v1")
 public class TramiteController {
     
     @Autowired
@@ -22,5 +23,6 @@ public class TramiteController {
     public List<Tramite> obtenerTramites() {
         return repository.findAll();
     }
+
     
 }

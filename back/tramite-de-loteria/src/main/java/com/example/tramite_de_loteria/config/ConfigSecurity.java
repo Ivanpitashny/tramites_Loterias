@@ -37,7 +37,8 @@ public class ConfigSecurity {
         
         http.authorizeHttpRequests( configure -> {
             configure
-            .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasRole("ADMINISTRADOR")                
+            .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasRole("ADMINISTRADOR")         
+            .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")          
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })
         .addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class)

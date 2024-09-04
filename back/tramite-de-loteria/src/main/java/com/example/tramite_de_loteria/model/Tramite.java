@@ -16,11 +16,11 @@ public class Tramite {
         super();
     }
 
-    public Tramite(Integer id, String estado, LocalDate fechaInicio, LocalDate fechaFin, Integer tipoTramiteId, Integer usuarioId){
+    public Tramite(Integer id, String estado, LocalDate fecha_inicio, LocalDate fecha_fin, Integer tipoTramiteId, Integer usuarioId){
         this.id = id;
         this.estado = estado;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+        this.fechaInicio = fecha_inicio;
+        this.fechaFin = fecha_fin;
         this.tipoTramiteId = tipoTramiteId;
         this.usuarioId = usuarioId;
     }
@@ -44,7 +44,6 @@ public class Tramite {
 
     @Column(name = "usr_id")
     private Integer usuarioId;
-
 
     public Integer getId() {
         return id;

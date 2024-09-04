@@ -1,3 +1,4 @@
+-- Active: 1722358145282@@127.0.0.1@3306@tramite_de_loteria
 CREATE TABLE users (
     id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -24,8 +25,8 @@ CREATE TABLE TipoTramite(
 CREATE TABLE Tramite(
     t_id INT PRIMARY KEY AUTO_INCREMENT,
     t_estado VARCHAR(50),
-    t_fechaInicio DATE,
-    t_fechaFin DATE,
+    t_fecha_inicio DATE,
+    t_fecha_fin DATE,
     tt_id INT,
     usr_id INT,
     Foreign Key (tt_id) REFERENCES TipoTramite(tt_id),
@@ -52,3 +53,9 @@ INSERT INTO authorities
 VALUES 
 ('lgiolongo','ROLE_ADMINISTRADOR');
 
+INSERT INTO tipotramite (tt_id, tt_tipo) VALUES 
+(1,'Cambio de Domicilio'),
+(2,'Cambio de Titular');
+
+INSERT INTO tramite (t_id, t_estado, t_fecha_inicio, t_fecha_fin, tt_id, usr_id) VALUES
+(1, 'Aprobado', '2024-08-10','2024-08-22', 1, 1);
