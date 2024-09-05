@@ -34,13 +34,16 @@ public class Usuario {
     @Column(name = "telefono")
     private Integer telefono;
 
+    @Column(name = "enabled")
+    private Integer enabled;
+
     // Constructor por defecto
     public Usuario() {
         super();
     }
 
     // Constructor con parámetros
-    public Usuario(Integer id, String username, String password, String nombre, String apellido, String mail, Integer telefono) {
+    public Usuario(Integer id, String username, String password, String nombre, String apellido, String mail, Integer telefono, Integer enabled) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -48,6 +51,7 @@ public class Usuario {
         this.apellido = apellido;
         this.mail = mail;
         this.telefono = telefono;
+        this.enabled = enabled;
     }
 
     // Getters y Setters
@@ -106,4 +110,14 @@ public class Usuario {
     public void setTelefono(Integer telefono) {
         this.telefono = telefono;
     }
+
+    public Integer getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Integer enabled) {
+        this.enabled = enabled;
+    }
+
+    
 }

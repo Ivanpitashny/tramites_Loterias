@@ -1,15 +1,22 @@
 package com.example.tramite_de_loteria.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tramite_de_loteria.model.Tramite;
 import com.example.tramite_de_loteria.repository.TramiteRepository;
+import com.example.tramite_de_loteria.response.TramiteResponseRest;
+
+import com.example.tramite_de_loteria.services.TramiteService;
 
 @CrossOrigin(origins = {"*"})
 @RestController
@@ -19,10 +26,31 @@ public class TramiteController {
     @Autowired
     private TramiteRepository repository;
 
+    @Autowired
+    private TramiteService service;
+    
     @GetMapping("/tramites")
-    public List<Tramite> obtenerTramites() {
-        return repository.findAll();
+    public ResponseEntity<TramiteResponseRest> obtenerTramites(){
+        ResponseEntity<TramiteResponseRest> response = service.obtenerTramites();
+        return response;
     }
 
+    @PostMapping("/tramites")
+    public ResponseEntity<TramiteResponseRest> creartramite(@RequestBody Tramite request) {
+        ResponseEntity<TramiteResponseRest> response = service.crearTramite(request);
+        return response;
+    }
+    
+    @PutMapping("tramites/{id}")
+    public ResponseEntity<TramiteResponseRest> actualizartramite(@RequestBody Tramite request, @PathVariable Integer id) {
+        ResponseEntity<TramiteResponseRest> response = service.actualizarTramite(request, id);
+        return response;
+    }
+
+    @DeleteMapping("tramites/{id}")
+    public ResponseEntity<TramiteResponseRest> eliminartramite(@PathVariable Integer id){
+        ResponseEntity<TramiteResponseRest> response = service.eliminarTramite(id);
+        return response;
+    }
     
 }

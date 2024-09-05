@@ -37,7 +37,13 @@ public class ConfigSecurity {
         
         http.authorizeHttpRequests( configure -> {
             configure
-            .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasRole("ADMINISTRADOR")         
+            // USUARIOS
+            .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET,"/v1/usuarios/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.POST,"/v1/usuarios").hasRole("ADMINISTRADOR") 
+            .requestMatchers(HttpMethod.PUT,"/v1/usuarios/**").hasRole("ADMINISTRADOR")      
+            .requestMatchers(HttpMethod.DELETE,"/v1/usuarios/**").hasRole("ADMINISTRADOR")  
+            // TRAMITES
             .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")          
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })
