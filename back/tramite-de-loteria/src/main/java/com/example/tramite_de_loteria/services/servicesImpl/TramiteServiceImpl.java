@@ -1,6 +1,8 @@
 package com.example.tramite_de_loteria.services.servicesImpl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tramite_de_loteria.dao.TramiteDao;
 import com.example.tramite_de_loteria.model.Tramite;
+import com.example.tramite_de_loteria.model.Usuario;
 import com.example.tramite_de_loteria.response.TramiteResponseRest;
+import com.example.tramite_de_loteria.response.UsuarioResponseRest;
 import com.example.tramite_de_loteria.services.TramiteService;
 
 @Service
@@ -48,14 +52,71 @@ public class TramiteServiceImpl implements TramiteService{
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<TramiteResponseRest> obtenerTramitesPorId(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtenerTramitesPorId'");
+        log.info("Inicio metodo obtenerTramitesPorId");
+		
+		TramiteResponseRest response = new TramiteResponseRest();
+		List<Tramite> list = new ArrayList<>();
+		
+		try {
+			Optional<Tramite> tramite = tramiteDao.findById(id);
+			
+			if (tramite.isPresent()) {
+				list.add(tramite.get());
+				response.getTramiteResponse().setTramite(list);
+				
+			} else {
+				log.error("Error al consultar tramite");
+				response.setMetada("Respuesta nok","-1" ,"Tramite no encontrado");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			log.error("Error al consultar usuario");
+			response.setMetada("Respuesta nok","-1" ,"Error al consultar tramite");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.setMetada("Respuesta ok", "00", "Respuesta exitosa");
+		return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<TramiteResponseRest> crearTramite(Tramite tramite) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'crearTramite'");
+        log.info("Inicio metodo crear usuario");
+        
+        UsuarioResponseRest response = new UsuarioResponseRest();
+        List<Usuario> list = new ArrayList<>();
+        
+        try {
+            if (tramite.getTipoTramiteId() != null && tramite.getTipoTramiteId().getId() != null) {
+                Optional<TipoUsuario> tipoUsuarioExistente = tipoUsuarioDao.findById(usuario.getTipoUsuario().getId());
+                if (tipoUsuarioExistente.isEmpty()) {
+                    log.error("TipoUsuario con id " + usuario.getTipoUsuario().getId() + " no encontrado");
+                    response.setMetada("Respuesta nok","-1", "TipoUsuario no encontrado");
+                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                }
+                usuario.setTipoUsuario(tipoUsuarioExistente.get());
+            } else {
+                log.error("TipoUsuario no proporcionado");
+                response.setMetada("Respuesta nok","-1", "TipoUsuario no proporcionado");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+
+            Usuario usuarioGuardado = usuarioDao.save(usuario);
+            
+            if (usuarioGuardado != null) {
+                list.add(usuarioGuardado);
+                response.getUsuarioResponse().setUsuario(list);
+            } else {
+                log.error("Error en grabar usuario");
+                response.setMetada("Respuesta nok","-1", "Usuario no guardado");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            log.error("Error en grabar usuario: ", e);
+            response.setMetada("Respuesta nok","-1", "Error al grabar usuario");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.setMetada("Respuesta ok", "00", "Usuario Creada");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
