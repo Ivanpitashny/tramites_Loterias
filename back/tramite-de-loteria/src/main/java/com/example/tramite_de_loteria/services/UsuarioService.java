@@ -6,6 +6,7 @@ import com.example.tramite_de_loteria.model.Usuario;
 import com.example.tramite_de_loteria.response.UsuarioResponseRest;
 
 public interface UsuarioService {
+
     public ResponseEntity<UsuarioResponseRest> obtenerUsuarios();
 
     public ResponseEntity<UsuarioResponseRest> obtenerUsuarioPorId(Integer id);

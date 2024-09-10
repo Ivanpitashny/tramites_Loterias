@@ -2,7 +2,7 @@ package com.example.tramite_de_loteria.response;
 
 import java.util.List;
 
-import com.example.tramite_de_loteria.model.Tramite;
+import com.example.tramite_de_loteria.model.TipoTramite;
 
 
 public class TipoTramiteResponse {

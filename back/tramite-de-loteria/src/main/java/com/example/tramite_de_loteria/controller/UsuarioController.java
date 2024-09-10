@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tramite_de_loteria.model.Usuario;
-import com.example.tramite_de_loteria.repository.UsuarioRepository;
 import com.example.tramite_de_loteria.response.UsuarioResponseRest;
 import com.example.tramite_de_loteria.services.UsuarioService;
 
@@ -22,9 +21,6 @@ import com.example.tramite_de_loteria.services.UsuarioService;
 @RestController
 @RequestMapping("/v1")
 public class UsuarioController {
-    
-    @Autowired
-    private UsuarioRepository repository;
 
     @Autowired
     private UsuarioService service;

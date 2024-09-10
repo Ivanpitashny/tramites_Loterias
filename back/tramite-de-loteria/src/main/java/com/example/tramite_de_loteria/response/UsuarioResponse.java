@@ -12,7 +12,7 @@ public class UsuarioResponse {
         return usuario;
     }
 
-    public void setUsuario(List<Usuario> usuario){
-        this.usuario = usuario;
+    public void setUsuario(List<Usuario> usuario2){
+        this.usuario = usuario2;
     }
 }

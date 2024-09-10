@@ -13,16 +13,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tramite_de_loteria.dao.TramiteDao;
+import com.example.tramite_de_loteria.model.TipoTramite;
 import com.example.tramite_de_loteria.model.Tramite;
-import com.example.tramite_de_loteria.model.Usuario;
 import com.example.tramite_de_loteria.response.TramiteResponseRest;
-import com.example.tramite_de_loteria.response.UsuarioResponseRest;
 import com.example.tramite_de_loteria.services.TramiteService;
+import com.example.tramite_de_loteria.services.TipoTramiteService;
 
 @Service
 public class TramiteServiceImpl implements TramiteService{
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
+
+    @Autowired
+    private TipoTramiteService tipoTramiteService;
 
     @Autowired
     private TramiteDao tramiteDao;
@@ -80,42 +83,36 @@ public class TramiteServiceImpl implements TramiteService{
 
     @Override
     public ResponseEntity<TramiteResponseRest> crearTramite(Tramite tramite) {
-        log.info("Inicio metodo crear usuario");
-        
-        UsuarioResponseRest response = new UsuarioResponseRest();
-        List<Usuario> list = new ArrayList<>();
+        log.info("Inicio metodo crear Tramite");
+        TramiteResponseRest response = new TramiteResponseRest();
+        List<Tramite> list = new ArrayList<>();
         
         try {
-            if (tramite.getTipoTramiteId() != null && tramite.getTipoTramiteId().getId() != null) {
-                Optional<TipoUsuario> tipoUsuarioExistente = tipoUsuarioDao.findById(usuario.getTipoUsuario().getId());
-                if (tipoUsuarioExistente.isEmpty()) {
-                    log.error("TipoUsuario con id " + usuario.getTipoUsuario().getId() + " no encontrado");
-                    response.setMetada("Respuesta nok","-1", "TipoUsuario no encontrado");
+            List<TipoTramite> tiposTramite = tipoTramiteService.obtenerTodosLosTiposTramites();
+            boolean tipoTramiteValido= tiposTramite.stream()
+                .anyMatch(tipo -> tipo.getId().equals(tramite.getTipoTramiteId()));
+
+            if (tramite.getTipoTramiteId() != null && tipoTramiteValido) {
+                Tramite tramiteGuardado = tramiteDao.save(tramite);
+                if (tramiteGuardado != null) {
+                    list.add(tramiteGuardado);
+                    response.getTramiteResponse().setTramite(list);
+                }else{
+                    log.error("Tramite No Guardado");
+                    response.setMetada("Respuesta nok","00", "Tramite No Grabado");
                     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
                 }
-                usuario.setTipoUsuario(tipoUsuarioExistente.get());
             } else {
-                log.error("TipoUsuario no proporcionado");
-                response.setMetada("Respuesta nok","-1", "TipoUsuario no proporcionado");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
-
-            Usuario usuarioGuardado = usuarioDao.save(usuario);
-            
-            if (usuarioGuardado != null) {
-                list.add(usuarioGuardado);
-                response.getUsuarioResponse().setUsuario(list);
-            } else {
-                log.error("Error en grabar usuario");
-                response.setMetada("Respuesta nok","-1", "Usuario no guardado");
+                log.error("Tipo de Tramite Invalido");
+                response.setMetada("Respuesta nok","-1", "Tipo de Tramite Invalido");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            log.error("Error en grabar usuario: ", e);
-            response.setMetada("Respuesta nok","-1", "Error al grabar usuario");
+            log.error("Error en grabar Tramite: ", e);
+            response.setMetada("Respuesta nok","-1", "Error al grabar Tramite");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.setMetada("Respuesta ok", "00", "Usuario Creada");
+        response.setMetada("Respuesta ok", "00", "Tramite Creado");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

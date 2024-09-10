@@ -159,4 +159,5 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return new ResponseEntity<UsuarioResponseRest>(response, HttpStatus.OK); // devuelve 200
     }
 
+
 }

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tramite_de_loteria.model.Tramite;
-import com.example.tramite_de_loteria.repository.TramiteRepository;
 import com.example.tramite_de_loteria.response.TramiteResponseRest;
 
 import com.example.tramite_de_loteria.services.TramiteService;
+import com.example.tramite_de_loteria.services.servicesImpl.TramiteServiceImpl;
 
 @CrossOrigin(origins = {"*"})
 @RestController
@@ -24,10 +24,10 @@ import com.example.tramite_de_loteria.services.TramiteService;
 public class TramiteController {
     
     @Autowired
-    private TramiteRepository repository;
+    private TramiteService service;
 
     @Autowired
-    private TramiteService service;
+    private TramiteServiceImpl tramiteServiceImpl;
     
     @GetMapping("/tramites")
     public ResponseEntity<TramiteResponseRest> obtenerTramites(){
@@ -36,8 +36,8 @@ public class TramiteController {
     }
 
     @PostMapping("/tramites")
-    public ResponseEntity<TramiteResponseRest> creartramite(@RequestBody Tramite request) {
-        ResponseEntity<TramiteResponseRest> response = service.crearTramite(request);
+    public ResponseEntity<TramiteResponseRest> crearTramite(@RequestBody Tramite request) {
+        ResponseEntity<TramiteResponseRest> response = tramiteServiceImpl.crearTramite(request);
         return response;
     }
     

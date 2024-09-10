@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TipoTramite")
+@Table(name = "tipo_tramite")
 public class TipoTramite {
     public TipoTramite(){
         super();
