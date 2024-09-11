@@ -97,10 +97,6 @@ public class TramiteServiceImpl implements TramiteService{
                 if (tramiteGuardado != null) {
                     list.add(tramiteGuardado);
                     response.getTramiteResponse().setTramite(list);
-                }else{
-                    log.error("Tramite No Guardado");
-                    response.setMetada("Respuesta nok","00", "Tramite No Grabado");
-                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
                 }
             } else {
                 log.error("Tipo de Tramite Invalido");

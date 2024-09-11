@@ -78,7 +78,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		response.setMetada("Respuesta ok", "00", "Respuesta exitosa");
-		return new ResponseEntity<>(response, HttpStatus.OK); // devuelve 200
+		return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
@@ -112,10 +112,6 @@ public class UsuarioServiceImpl implements UsuarioService{
                     response.setMetada("Respuesta nok", "-1", "Usuario creado, pero autorización no asignada");
                     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
                 }
-            } else {
-                log.error("Error en grabar usuario");
-                response.setMetada("Respuesta nok","-1", "Usuario no guardado");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             log.error("Error en grabar usuario: ", e);

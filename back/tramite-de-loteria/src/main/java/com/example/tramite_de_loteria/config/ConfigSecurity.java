@@ -17,6 +17,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.example.tramite_de_loteria.filter.JwtReqFilter;
 
@@ -34,6 +35,13 @@ public class ConfigSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors(cors -> cors.configurationSource(request -> {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:8081"); // Cambia '*' por la URL de tu front si es necesario, como "http://localhost:3000"
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        return config;
+        }));
         
         http.authorizeHttpRequests( configure -> {
             configure
@@ -44,7 +52,7 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.PUT,"/v1/usuarios/**").hasRole("ADMINISTRADOR")      
             .requestMatchers(HttpMethod.DELETE,"/v1/usuarios/**").hasRole("ADMINISTRADOR")  
             // TRAMITES
-            .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("AGENCIERO")
             .requestMatchers(HttpMethod.POST, "/v1/tramites").hasRole("ADMINISTRADOR")          
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })

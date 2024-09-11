@@ -45,11 +45,7 @@ public class AutorizacionServiceImpl implements AutorizacionService{
                 if (autorizacionGuardada != null) {
                     list.add(autorizacionGuardada);
                     response.getAutorizacionResponse().setAutorizacion(list);
-                } else {
-                    log.error("Autorizacion No Guardada");
-                    response.setMetada("Respuesta Erronea", "-1", "Autorizacion no grabada");
-                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-                    }
+                }
                 } else {
                 log.error("Rol no permitido: " + autorizacion.getAutorizacion());
                 response.setMetada("Respuesta Erronea", "-1", "Rol no permitido");
