@@ -2,15 +2,13 @@ import * as React from 'react';
 import { TextInput } from 'react-native';
 import { globalTheme } from '../theme/globalTheme';
 
-const CustomInput = ({title, holder, inputType}) => {
-  const [text, setText] = React.useState("");
-
+const CustomInput = ({ title, holder, inputType, value, onChangeText }) => {
   return (
     <TextInput
       label={title}
-      value={text}
-      placeholder= {holder}
-      onChangeText={text => setText(text)}
+      value={value}
+      placeholder={holder}
+      onChangeText={onChangeText}
       style = {globalTheme.input}
       secureTextEntry = {inputType === 2}
     />
