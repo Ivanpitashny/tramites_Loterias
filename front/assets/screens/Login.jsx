@@ -8,14 +8,14 @@ const Login = ({ navigation }) => {
 
   const[usuario, setUsuario]= useState('');
   const[contrasenia, setContrasenia]= useState('');
-  const [error, setError] = useState(null); // Estado para manejar errores
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
 
     console.log('Datos enviados: ',{usuario,contrasenia});
 
     try {
-      const response = await fetch('http://10.168.128.116:8080/v1/authenticate', {
+      const response = await fetch('http://192.168.100.9:8080/v1/authenticate', { //cambiar segun la ip de cada uno
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -27,21 +27,28 @@ const Login = ({ navigation }) => {
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error de autenticación");
-      }
+       // Verificar si la respuesta es exitosa
+       if (response.ok) {
+        const data = await response.json();
+        // Limpiar el mensaje de error si la autenticación es exitosa
+        setErrorMessage('');
+        // Guardar el token o redirigir al usuario a otra pantalla
+        console.log('Success:', data.jwToken);
+
+        await AsyncStorage.setItem('authToken', data.jwToken);
+
+        navigation.navigate('HomeAgenciero');
   
-      const data = await response.json();
-      console.log('Success:', data);
-
-      await AsyncStorage.setItem('authToken', data.token);
-
-      navigation.navigate('HomeAgenciero');
+      } else if (response.status === 401) {
+        // Si la respuesta es 401, mostrar el mensaje de credenciales incorrectas
+        setErrorMessage('Usuario o contraseña incorrectos.');
+      } else {
+        // Para otros errores
+        setErrorMessage('Ocurrió un error. Inténtalo de nuevo.');
+      }
     } catch (error) {
       console.error('Error:', error);
-      // Display an error message to the user
-      setError(error.message);
+      setErrorMessage('Error en la conexión con el servidor.');
     }
   };
 
@@ -72,6 +79,10 @@ const Login = ({ navigation }) => {
         title="Ingresar"
         onPress={handleLogin}  // Navegar a HomeAgenciero
       />
+
+      {errorMessage ? (
+        <Text style={{ color: 'red', marginTop: 10 }}>{errorMessage}</Text>
+      ) : null}
 
     </SafeAreaView>
   );
