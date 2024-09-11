@@ -37,6 +37,9 @@ public class Usuario {
     @Column(name = "enabled")
     private Integer enabled;
 
+    @Column(name = "tipo")
+    private Integer tipo;
+
     // Constructor por defecto
     public Usuario() {
         super();
@@ -117,6 +120,14 @@ public class Usuario {
 
     public void setEnabled(Integer enabled) {
         this.enabled = enabled;
+    }
+
+    public Integer getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Integer tipo) {
+        this.tipo = tipo;
     }
 
     

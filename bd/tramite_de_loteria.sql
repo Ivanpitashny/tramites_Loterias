@@ -8,22 +8,23 @@ CREATE TABLE `users` (
     `mail` varchar(255) DEFAULT NULL,
     `telefono` int(11) DEFAULT NULL,
     `enabled` int(11) DEFAULT NULL,
+    `tipo` int(1) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `username` (`username`)
-) ENGINE = InnoDB AUTO_INCREMENT = 3 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci
+) 
 
 CREATE TABLE `authorities` (
     `username` varchar(50) NOT NULL,
     `authority` varchar(255) DEFAULT NULL,
     UNIQUE KEY `authorities_idx_1` (`username`, `authority`),
     CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci
+)
 
 CREATE TABLE `tipo_tramite` (
     `tt_id` int(11) NOT NULL AUTO_INCREMENT,
-    `tt_tipo` varchar(50) DEFAULT NULL,
+    `tt_tipo` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`tt_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 3 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci
+)
 
 CREATE TABLE `tramite` (
     `t_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -37,7 +38,7 @@ CREATE TABLE `tramite` (
     KEY `usr_id` (`usr_id`),
     CONSTRAINT `tramite_ibfk_1` FOREIGN KEY (`tt_id`) REFERENCES `tipo_tramite` (`tt_id`),
     CONSTRAINT `tramite_ibfk_2` FOREIGN KEY (`usr_id`) REFERENCES `users` (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 5 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci
+) 
 
 CREATE TABLE `historial_actividades` (
     `ha_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -54,7 +55,7 @@ CREATE TABLE `historial_actividades` (
     KEY `t_id` (`t_id`),
     CONSTRAINT `historial_actividades_ibfk_1` FOREIGN KEY (`usr_id`) REFERENCES `users` (`id`),
     CONSTRAINT `historial_actividades_ibfk_2` FOREIGN KEY (`t_id`) REFERENCES `tramite` (`t_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci
+) 
 
 INSERT INTO users (id, username, password , nombre, apellido, mail, telefono, enabled) 
 VALUES 

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tramite_de_loteria.dao.UsuarioDao;
+import com.example.tramite_de_loteria.model.Autorizacion;
 import com.example.tramite_de_loteria.model.Usuario;
+import com.example.tramite_de_loteria.response.AutorizacionResponseRest;
 import com.example.tramite_de_loteria.response.UsuarioResponseRest;
 import com.example.tramite_de_loteria.services.UsuarioService;
 
@@ -24,6 +26,9 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Autowired
     private UsuarioDao usuarioDao;
+
+    @Autowired
+    private AutorizacionServiceImpl autorizacionService;
 
     @Override
     @Transactional(readOnly = true)
@@ -79,10 +84,8 @@ public class UsuarioServiceImpl implements UsuarioService{
     @Override
     public ResponseEntity<UsuarioResponseRest> crearUsuario(Usuario usuario) {
         log.info("Inicio metodo crearUsuario");
-        
         UsuarioResponseRest response = new UsuarioResponseRest();
         List<Usuario> list = new ArrayList<>();
-        
         try {
             
             Usuario usuarioGuardado = usuarioDao.save(usuario);
@@ -90,6 +93,25 @@ public class UsuarioServiceImpl implements UsuarioService{
             if (usuarioGuardado != null) {
                 list.add(usuarioGuardado);
                 response.getUsuarioResponse().setUsuario(list);
+                
+                // creacion autorizacion
+                Autorizacion autorizacion = new Autorizacion();
+                autorizacion.setUsername(usuarioGuardado.getUsername());
+                if (usuarioGuardado.getTipo() == 1) {
+                    autorizacion.setAutorizacion("ROLE_ADMINISTRADOR");
+                }else if(usuarioGuardado.getTipo() == 2){
+                    autorizacion.setAutorizacion("ROLE_AGENCIERO");
+                }else {
+                    autorizacion.setAutorizacion("");
+                }
+
+                ResponseEntity<AutorizacionResponseRest> autorizacionResponse = autorizacionService.crearAutorizacion(autorizacion);
+                
+                if(autorizacionResponse.getStatusCode() != HttpStatus.OK) {
+                    log.error("Error en crear la autorización para el usuario");
+                    response.setMetada("Respuesta nok", "-1", "Usuario creado, pero autorización no asignada");
+                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                }
             } else {
                 log.error("Error en grabar usuario");
                 response.setMetada("Respuesta nok","-1", "Usuario no guardado");
