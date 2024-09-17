@@ -1,17 +1,50 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Feather } from '@expo/vector-icons';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-paper';
 
-const HomeAgenciero = ({ navigation }) => {
+const HomeAdministrador = ({ navigation }) => {
     const [decodedToken, setDecodedToken] = useState(null);
-    const [tramites, setTramites] = useState([]);
+    const [tramites, setTramites] = useState([]);  // Estado para los trámites
+    const [errorMessage, setErrorMessage] = useState(null); 
+
+    const fetchData = async () => {    
+        try {
+            const token = await AsyncStorage.getItem('authToken');
+            if (token !== null) {
+                const response = await fetch('http://10.168.128.116:8080/v1/tramites', { //cambiar segun la ip de cada uno
+                    method: 'GET',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setTramites(data.tramiteResponse.tramite);
+                    console.log(data);
+                }else{
+                    console.error('Error en la respuesta:', response.status);
+                }
+            }else{
+                console.log('token no encontrado');
+            }
+        } catch (error) {
+          console.error('Error:', error);
+          setErrorMessage('Error en la conexión con el servidor.');
+        }
+      };
+
+      useEffect(() => {
+        fetchData();
+      },[]);
 
     const renderTramite = ({ item }) => (
         <View style={styles.row}>
-            <Text style={styles.cell}>{item.comprobante}</Text>
-            <Text style={styles.cell}>{item.fecha}</Text>
+            <Text style={styles.cell}>{item.id}</Text>
+            <Text style={styles.cell}>{item.fechaInicio}</Text>
             <Text style={styles.cell}>{item.estado}</Text>
             <TouchableOpacity style={styles.editButton}>
                 <Text>✏️</Text>
@@ -34,12 +67,12 @@ const HomeAgenciero = ({ navigation }) => {
         <View style={styles.container}>
             {/* Logo y Título */}
             <View style={styles.header}>
-            <Feather name="log-out" size={24} color="black" onPress={removeToken} style={styles.logoutIcon}/>
+                <Feather name="log-out" size={24} color="black" onPress={removeToken} style={styles.logoutIcon}/>
                 <Image
                     source={require('../images/logo_loteria.jpg')}
                     style={styles.logo}
                 />
-                <Text style={styles.title}>Mis trámites</Text>
+                <Text style={styles.title}>Trámites</Text>
             </View>
 
             {/* Línea divisoria */}
@@ -56,12 +89,13 @@ const HomeAgenciero = ({ navigation }) => {
                 <FlatList
                     data={tramites}
                     renderItem={renderTramite}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()} // Asegúrate de que `item.id` es único y está presente
+                    ListEmptyComponent={<Text>No hay trámites disponibles</Text>}
                 />
             </View>
 
 
-            <Button
+            {/* <Button
                 mode="contained"
                 style={styles.newTramiteButton}
                 onPress={() => navigation.navigate('SeleccionTramite')}
@@ -69,7 +103,7 @@ const HomeAgenciero = ({ navigation }) => {
                 textColor="#fff" 
             >
                 INICIAR NUEVO TRÁMITE
-            </Button>
+            </Button> */}
 
         </View>
     );
@@ -154,4 +188,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeAgenciero
+export default HomeAdministrador

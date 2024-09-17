@@ -19,6 +19,7 @@ public class JwtService {
 	  private static final String JWT_SECRET_KEY = "ecommerce";
 
 	  public static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 60 * (long) 1; // 1 hora
+	  //public static final long JWT_TOKEN_VALIDITY = 1000 * 10L; // 10 segundos
 
 	  public String extractUsername(String token) {
 	    return extractClaim(token, Claims::getSubject);

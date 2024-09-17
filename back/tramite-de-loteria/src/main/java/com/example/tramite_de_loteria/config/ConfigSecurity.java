@@ -52,7 +52,7 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.PUT,"/v1/usuarios/**").hasRole("ADMINISTRADOR")      
             .requestMatchers(HttpMethod.DELETE,"/v1/usuarios/**").hasRole("ADMINISTRADOR")  
             // TRAMITES
-            .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("AGENCIERO")
+            .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.POST, "/v1/tramites").hasRole("ADMINISTRADOR")          
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })

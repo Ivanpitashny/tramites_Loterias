@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, SafeAreaView, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
+import {jwtDecode} from 'jwt-decode';
+
 
 const Login = ({ navigation }) => {
 
@@ -15,7 +17,7 @@ const Login = ({ navigation }) => {
     console.log('Datos enviados: ',{usuario,contrasenia});
 
     try {
-      const response = await fetch('http://192.168.100.9:8080/v1/authenticate', { //cambiar segun la ip de cada uno
+      const response = await fetch('http://10.168.128.116:8080/v1/authenticate', { //cambiar segun la ip de cada uno
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -36,8 +38,21 @@ const Login = ({ navigation }) => {
         console.log('Success:', data.jwToken);
 
         await AsyncStorage.setItem('authToken', data.jwToken);
+        const storedToken = await AsyncStorage.getItem('authToken');
+        console.log('Token almacenado:', storedToken);
 
-        navigation.navigate('HomeAgenciero');
+        try {
+          const decodedToken = jwtDecode(storedToken);
+        console.log('Token decodificado:', decodedToken);
+        if ( decodedToken.rol && decodedToken.rol.authority === 'ROLE_ADMINISTRADOR') {
+          navigation.navigate('HomeAdministrador');
+        }else{
+          navigation.navigate('HomeAgenciero');
+        }
+        } catch (decodeError) {
+          console.error('Error al decodificar el token:', decodeError);
+          setErrorMessage('Error al decodificar el token.');
+        }
   
       } else if (response.status === 401) {
         // Si la respuesta es 401, mostrar el mensaje de credenciales incorrectas
@@ -51,6 +66,8 @@ const Login = ({ navigation }) => {
       setErrorMessage('Error en la conexión con el servidor.');
     }
   };
+
+
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
