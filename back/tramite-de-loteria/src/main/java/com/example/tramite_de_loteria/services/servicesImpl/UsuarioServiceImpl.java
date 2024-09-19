@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +23,7 @@ import com.example.tramite_de_loteria.response.UsuarioResponseRest;
 import com.example.tramite_de_loteria.services.UsuarioService;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService{
+public class UsuarioServiceImpl implements UsuarioService,UserDetailsService{
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
 
@@ -29,6 +32,16 @@ public class UsuarioServiceImpl implements UsuarioService{
 
     @Autowired
     private AutorizacionServiceImpl autorizacionService;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Aquí buscas el usuario en la base de datos usando el DAO
+        Usuario usuario = usuarioDao.findByUsername(username);
+        if (usuario == null) {
+            throw new UsernameNotFoundException("Usuario no encontrado con el nombre: " + username);
+        }
+        return usuario; // Devuelves el usuario que implementa UserDetails
+    }
 
     @Override
     @Transactional(readOnly = true)

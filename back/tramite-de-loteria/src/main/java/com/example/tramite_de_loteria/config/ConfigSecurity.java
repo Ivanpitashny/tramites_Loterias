@@ -28,10 +28,10 @@ public class ConfigSecurity {
     @Lazy
     private JwtReqFilter jwtReqFilter;
     
-    @Bean
-    public UserDetailsManager userDetailsManager(DataSource datasource) {
-        return new JdbcUserDetailsManager(datasource);
-    }
+    // @Bean
+    // public UserDetailsManager userDetailsManager(DataSource datasource) {
+    //     return new JdbcUserDetailsManager(datasource);
+    // }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

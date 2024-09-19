@@ -4,6 +4,7 @@ import { Text, SafeAreaView, Image } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
 import {jwtDecode} from 'jwt-decode';
+import { BASE_URL } from '../components/config';
 
 
 const Login = ({ navigation }) => {
@@ -17,7 +18,7 @@ const Login = ({ navigation }) => {
     console.log('Datos enviados: ',{usuario,contrasenia});
 
     try {
-      const response = await fetch('http://10.168.128.116:8080/v1/authenticate', { //cambiar segun la ip de cada uno
+      const response = await fetch(`${BASE_URL}/v1/authenticate`, { //cambiar segun la ip de cada uno
         method: 'POST',
         headers: {
           Accept: 'application/json',

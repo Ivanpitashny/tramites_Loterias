@@ -3,6 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-paper';
+import { BASE_URL } from '../components/config';
 
 const HomeAdministrador = ({ navigation }) => {
     const [decodedToken, setDecodedToken] = useState(null);
@@ -13,7 +14,7 @@ const HomeAdministrador = ({ navigation }) => {
         try {
             const token = await AsyncStorage.getItem('authToken');
             if (token !== null) {
-                const response = await fetch('http://10.168.128.116:8080/v1/tramites', { //cambiar segun la ip de cada uno
+                const response = await fetch(`${BASE_URL}/v1/tramites`, { //cambiar segun la ip de cada uno
                     method: 'GET',
                     headers: {
                     Accept: 'application/json',

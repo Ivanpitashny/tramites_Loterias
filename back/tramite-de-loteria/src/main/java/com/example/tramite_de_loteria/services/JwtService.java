@@ -13,6 +13,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import com.example.tramite_de_loteria.model.Usuario;
+
 @Service
 public class JwtService {
 	
@@ -41,10 +43,11 @@ public class JwtService {
 	    return extractExpiration(token).before(new Date());
 	  }
 
-	  public String generateToken(UserDetails userDetails) {
+	  public String generateToken(Usuario userDetails) {
 	    Map<String, Object> claims = new HashMap<>();
 	    var rol = userDetails.getAuthorities().stream().collect(Collectors.toList()).get(0);
 	    claims.put("rol", rol);
+		claims.put("userId", userDetails.getId());
 	    return createToken(claims, userDetails.getUsername());
 	  }
 
