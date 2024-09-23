@@ -16,7 +16,6 @@ import com.example.tramite_de_loteria.model.Usuario;
 import com.example.tramite_de_loteria.response.UsuarioResponseRest;
 import com.example.tramite_de_loteria.services.UsuarioService;
 
-
 @CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/v1")

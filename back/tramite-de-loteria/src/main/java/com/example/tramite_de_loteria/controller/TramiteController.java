@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tramite_de_loteria.model.Tramite;
 import com.example.tramite_de_loteria.response.TramiteResponseRest;
-
 import com.example.tramite_de_loteria.services.TramiteService;
 import com.example.tramite_de_loteria.services.servicesImpl.TramiteServiceImpl;
 
@@ -34,6 +33,19 @@ public class TramiteController {
         ResponseEntity<TramiteResponseRest> response = service.obtenerTramites();
         return response;
     }
+
+    @GetMapping("/tramites/{id}")
+    public ResponseEntity<TramiteResponseRest> obtenerTramitesPorId(@PathVariable Integer id){
+        ResponseEntity<TramiteResponseRest> response = tramiteServiceImpl.obtenerTramitesPorId(id);
+        return response;
+    }
+
+    @GetMapping("/usuarios/{id}/tramites")
+    public ResponseEntity<TramiteResponseRest> obtenerTramitesPorIdUsuario(@PathVariable("id") Integer usuarioId){
+        ResponseEntity<TramiteResponseRest> response = tramiteServiceImpl.obtenerTramitesPorIdUsuario(usuarioId);
+        return response;
+    }
+
 
     @PostMapping("/tramites")
     public ResponseEntity<TramiteResponseRest> crearTramite(@RequestBody Tramite request) {

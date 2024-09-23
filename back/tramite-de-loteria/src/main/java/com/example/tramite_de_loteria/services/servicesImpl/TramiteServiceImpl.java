@@ -82,6 +82,37 @@ public class TramiteServiceImpl implements TramiteService{
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<TramiteResponseRest> obtenerTramitesPorIdUsuario(Integer usuarioId) {
+        log.info("Inicio metodo obtenerTramitesPorIdUsuario");
+        
+        TramiteResponseRest response = new TramiteResponseRest();
+        List<Tramite> list = new ArrayList<>();
+        
+        try {
+            // Utiliza el método findByUsuarioId para obtener los trámites del usuario
+            List<Tramite> tramites = tramiteDao.findByUsuarioId(usuarioId);
+            
+            if (!tramites.isEmpty()) {
+                response.getTramiteResponse().setTramite(tramites);
+            } else {
+                log.error("No se encontraron tramites para el usuario con id " + usuarioId);
+                response.setMetada("Respuesta nok","-1", "No se encontraron tramites para el usuario");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+            
+        } catch (Exception e) {
+            log.error("Error al consultar tramites por usuario", e);
+            response.setMetada("Respuesta nok","-1", "Error al consultar tramites por usuario");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        response.setMetada("Respuesta ok", "00", "Tramites encontrados");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
+
+    @Override
     public ResponseEntity<TramiteResponseRest> crearTramite(Tramite tramite) {
         log.info("Inicio metodo crear Tramite");
         TramiteResponseRest response = new TramiteResponseRest();

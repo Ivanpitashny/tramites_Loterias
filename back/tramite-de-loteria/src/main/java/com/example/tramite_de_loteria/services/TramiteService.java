@@ -9,6 +9,8 @@ public interface TramiteService {
     public ResponseEntity<TramiteResponseRest> obtenerTramites();
 
     public ResponseEntity<TramiteResponseRest> obtenerTramitesPorId(Integer id);
+
+    public ResponseEntity<TramiteResponseRest> obtenerTramitesPorIdUsuario(Integer id);
     
     public ResponseEntity<TramiteResponseRest> crearTramite(Tramite tramite);
 
