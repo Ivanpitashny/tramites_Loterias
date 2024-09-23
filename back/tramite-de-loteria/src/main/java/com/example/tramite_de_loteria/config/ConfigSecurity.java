@@ -54,6 +54,7 @@ public class ConfigSecurity {
             // TRAMITES
             .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.GET, "/v1/tramites/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET, "/usuarios/{id}/tramites").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.POST, "/v1/tramites").hasRole("ADMINISTRADOR")          
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })

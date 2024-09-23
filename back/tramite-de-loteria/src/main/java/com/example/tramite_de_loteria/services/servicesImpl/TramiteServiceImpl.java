@@ -110,7 +110,6 @@ public class TramiteServiceImpl implements TramiteService{
         response.setMetada("Respuesta ok", "00", "Tramites encontrados");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
 
     @Override
     public ResponseEntity<TramiteResponseRest> crearTramite(Tramite tramite) {
