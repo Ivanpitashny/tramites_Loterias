@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, SafeAreaView, Image, Platform, TouchableWithoutFeedback } from 'react-native';
+import { Text, SafeAreaView, Image, Platform, Pressable } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
 import { Keyboard } from 'react-native';
 import CustomButton from '../components/CustomButton';
@@ -77,7 +77,7 @@ const Login = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
     >
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <Pressable onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Image 
             style={{borderRadius:20 ,width: 200, height: 200, margin: 20, justifyContent: 'center' }}
@@ -110,7 +110,7 @@ const Login = ({ navigation }) => {
           ) : null}
 
         </SafeAreaView>
-      </TouchableWithoutFeedback>
+      </Pressable>
     </KeyboardAvoidingView>
   );
 };
