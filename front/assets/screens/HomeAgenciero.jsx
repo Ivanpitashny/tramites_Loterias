@@ -1,17 +1,72 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Feather } from '@expo/vector-icons';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-paper';
+import {jwtDecode} from 'jwt-decode';
+import { BASE_URL } from '../components/config';
 
 const HomeAgenciero = ({ navigation }) => {
     const [decodedToken, setDecodedToken] = useState(null);
     const [tramites, setTramites] = useState([]);
 
+
+    const decodeToken = async () =>{
+        try {
+            const storedToken = await AsyncStorage.getItem('authToken');
+            const decodedToken = jwtDecode(storedToken);
+            //console.log('Token decodificado:', decodedToken);
+    
+            // Extraer userId del token
+            const userId = decodedToken.userId; // Asegúrate de que el token tenga el campo userId
+            if (userId) {
+                await fetchData(userId); // Pasamos el userId correctamente a fetchData
+            } else {
+                console.error('userId no encontrado en el token.');
+            }
+        } catch (decodeError) {
+            console.error('Error al decodificar el token:', decodeError);
+            setErrorMessage('Error al decodificar el token.');
+        }
+    }
+    const fetchData = async (userId) => {    
+        try {
+            const token = await AsyncStorage.getItem('authToken');
+            if (token !== null) {
+                const url = `${BASE_URL}/v1/tramites/${userId}/usuarios`;
+                //console.log(url);
+                const response = await fetch(url, { //cambiar segun la ip de cada uno
+                    method: 'GET',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setTramites(data.tramiteResponse.tramite);
+                    //console.log(data);
+                }else{
+                    console.error('Error en la respuesta:', response.status);
+                    console.error('Respuesta del servidor:', response);
+                }
+            }else{
+                console.log('token no encontrado');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setErrorMessage('Error en la conexión con el servidor.');
+        }
+    };
+    useEffect(() => {
+        decodeToken();
+    },[]);
+
     const renderTramite = ({ item }) => (
         <View style={styles.row}>
-            <Text style={styles.cell}>{item.comprobante}</Text>
-            <Text style={styles.cell}>{item.fecha}</Text>
+            <Text style={styles.cell}>{item.id}</Text>
+            <Text style={styles.cell}>{item.fechaInicio}</Text>
             <Text style={styles.cell}>{item.estado}</Text>
             <TouchableOpacity style={styles.editButton}>
                 <Text>✏️</Text>
@@ -21,14 +76,18 @@ const HomeAgenciero = ({ navigation }) => {
 
     const removeToken = async () => {
         try {
-          await AsyncStorage.removeItem('jwtToken');
-          setDecodedToken(null);
-          console.log('Token eliminado');
-          navigation.navigate('Login');
+            await AsyncStorage.removeItem('jwtToken');
+            setDecodedToken(null);
+            console.log('Token eliminado');
+            navigation.navigate('Login');
         } catch (e) {
-          console.log('Error al eliminar el token', e);
+            console.log('Error al eliminar el token', e);
         }
-      };
+    };
+
+    const refreshData = async () => {
+        await decodeToken(); // Refresca los trámites llamando nuevamente a decodeToken
+    };
 
     return (
         <View style={styles.container}>
@@ -40,7 +99,11 @@ const HomeAgenciero = ({ navigation }) => {
                     style={styles.logo}
                 />
                 <Text style={styles.title}>Mis trámites</Text>
+                {/* Botón de refrescar */}
+                <Feather name="refresh-ccw" size={24} color="black" onPress={refreshData} style={styles.refreshIcon} />
             </View>
+            
+            
 
             {/* Línea divisoria */}
             <View style={styles.divider} />
@@ -48,7 +111,7 @@ const HomeAgenciero = ({ navigation }) => {
             {/* Lista de Trámites */}
             <View style={styles.table}>
                 <View style={styles.tableHeader}>
-                    <Text style={styles.headerText}>N° Comprobante</Text>
+                    <Text style={styles.headerText}>N° Seguimiento</Text>
                     <Text style={styles.headerText}>Fecha</Text>
                     <Text style={styles.headerText}>Estado</Text>
                     <Text style={styles.headerText}>Editar</Text>
@@ -56,7 +119,8 @@ const HomeAgenciero = ({ navigation }) => {
                 <FlatList
                     data={tramites}
                     renderItem={renderTramite}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()} // Asegúrate de que `item.id` es único y está presente
+                    ListEmptyComponent={<Text>No hay trámites disponibles</Text>}
                 />
             </View>
 
@@ -151,6 +215,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 35,
         left: 16,
+    },
+    refreshIcon: {
+        position: 'absolute',
+        top: 180,
+        right: 16,
     },
 });
 

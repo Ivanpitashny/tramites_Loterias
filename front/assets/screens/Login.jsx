@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, SafeAreaView, Image } from 'react-native';
+import { Text, SafeAreaView, Image, Platform, TouchableWithoutFeedback } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
+import { Keyboard } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
 import {jwtDecode} from 'jwt-decode';
@@ -15,7 +17,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
 
-    console.log('Datos enviados: ',{usuario,contrasenia});
+    //console.log('Datos enviados: ',{usuario,contrasenia});
 
     try {
       const response = await fetch(`${BASE_URL}/v1/authenticate`, { //cambiar segun la ip de cada uno
@@ -36,15 +38,15 @@ const Login = ({ navigation }) => {
         // Limpiar el mensaje de error si la autenticación es exitosa
         setErrorMessage('');
         // Guardar el token o redirigir al usuario a otra pantalla
-        console.log('Success:', data.jwToken);
+        //console.log('Success:', data.jwToken);
 
         await AsyncStorage.setItem('authToken', data.jwToken);
         const storedToken = await AsyncStorage.getItem('authToken');
-        console.log('Token almacenado:', storedToken);
+        //console.log('Token almacenado:', storedToken);
 
         try {
           const decodedToken = jwtDecode(storedToken);
-        console.log('Token decodificado:', decodedToken);
+        //console.log('Token decodificado:', decodedToken);
         if ( decodedToken.rol && decodedToken.rol.authority === 'ROLE_ADMINISTRADOR') {
           navigation.navigate('HomeAdministrador');
         }else{
@@ -71,38 +73,45 @@ const Login = ({ navigation }) => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Image 
-        style={{borderRadius:20 ,width: 200, height: 200, margin: 20, justifyContent: 'center' }}
-        source={require('../images/logo_loteria.jpg')}
-      />
-      <Text style={{ fontSize: 24,marginTop: 40, fontWeight: 'bold', marginBottom: 20 }}>Trámites Loteria</Text>
-      
-      <CustomInput 
-        title="Usuario" 
-        holder="Ingrese su usuario" 
-        value={usuario}
-        onChangeText={text => setUsuario(text)}
-      />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+    >
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Image 
+            style={{borderRadius:20 ,width: 200, height: 200, margin: 20, justifyContent: 'center' }}
+            source={require('../images/logo_loteria.jpg')}
+          />
+          <Text style={{ fontSize: 24,marginTop: 40, fontWeight: 'bold', marginBottom: 20 }}>Trámites Loteria</Text>
+          
+          <CustomInput 
+            title="Usuario" 
+            holder="Ingrese su usuario" 
+            value={usuario}
+            onChangeText={text => setUsuario(text)}
+          />
 
-      <CustomInput 
-        title="Contraseña" 
-        holder="Ingrese su contraseña" 
-        inputType={2} 
-        value={contrasenia}
-        onChangeText={text => setContrasenia(text)} 
-      />
+          <CustomInput 
+            title="Contraseña" 
+            holder="Ingrese su contraseña" 
+            inputType={2} 
+            value={contrasenia}
+            onChangeText={text => setContrasenia(text)} 
+          />
 
-      <CustomButton   
-        title="Ingresar"
-        onPress={handleLogin}  // Navegar a HomeAgenciero
-      />
+          <CustomButton   
+            title="Ingresar"
+            onPress={handleLogin}  // Navegar a HomeAgenciero
+          />
 
-      {errorMessage ? (
-        <Text style={{ color: 'red', marginTop: 10 }}>{errorMessage}</Text>
-      ) : null}
+          {errorMessage ? (
+            <Text style={{ color: 'red', marginTop: 10 }}>{errorMessage}</Text>
+          ) : null}
 
-    </SafeAreaView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 

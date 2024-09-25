@@ -41,7 +41,7 @@ public class TramiteController {
     }
 
     // verificar
-    @GetMapping("/usuarios/{id}/tramites")
+    @GetMapping("/tramites/{id}/usuarios")
     public ResponseEntity<TramiteResponseRest> obtenerTramitesPorIdUsuario(@PathVariable("id") Integer usuarioId){
         ResponseEntity<TramiteResponseRest> response = tramiteServiceImpl.obtenerTramitesPorIdUsuario(usuarioId);
         return response;

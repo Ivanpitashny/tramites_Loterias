@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import { Feather } from '@expo/vector-icons';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button } from 'react-native-paper';
 import { BASE_URL } from '../components/config';
 
 const HomeAdministrador = ({ navigation }) => {
@@ -64,6 +63,10 @@ const HomeAdministrador = ({ navigation }) => {
         }
       };
 
+    const refreshData = async () => {
+        await fetchData(); // Refresca los trámites llamando nuevamente a decodeToken
+    };
+
     return (
         <View style={styles.container}>
             {/* Logo y Título */}
@@ -74,6 +77,8 @@ const HomeAdministrador = ({ navigation }) => {
                     style={styles.logo}
                 />
                 <Text style={styles.title}>Trámites</Text>
+                {/* Botón de refrescar */}
+                <Feather name="refresh-ccw" size={24} color="black" onPress={refreshData} style={styles.refreshIcon} />
             </View>
 
             {/* Línea divisoria */}
@@ -186,6 +191,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 35,
         left: 16,
+    },
+    refreshIcon: {
+        position: 'absolute',
+        top: 180,
+        right: 16,
     },
 });
 

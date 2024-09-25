@@ -30,6 +30,9 @@ public class Tramite {
     @Column(name = "t_id")
     private Integer id;
 
+    @Column(name = "t_name")
+    private String nombre;
+
     @Column(name = "t_estado")
     private String estado;
 
@@ -51,6 +54,14 @@ public class Tramite {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getEstado() {

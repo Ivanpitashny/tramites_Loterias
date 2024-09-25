@@ -1,7 +1,85 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {jwtDecode} from 'jwt-decode';
+import { BASE_URL } from '../components/config';
 
 const SeleccionTramite = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [tramites, setTramites] = useState([]);
+    
+    const decodeToken = async () =>{
+        try {
+            const storedToken = await AsyncStorage.getItem('authToken');
+            const decodedToken = jwtDecode(storedToken);
+            //console.log('Token decodificado:', decodedToken);
+    
+            // Extraer userId del token
+            const userId = decodedToken.userId; // Asegúrate de que el token tenga el campo userId
+            if (userId) {
+                return userId;
+            } else {
+                console.error('userId no encontrado en el token.');
+            }
+        } catch (decodeError) {
+            console.error('Error al decodificar el token:', decodeError);
+            setErrorMessage('Error al decodificar el token.');
+        }
+    }
+    const handleInicio = async (id) =>{
+        
+        const usuarioId = await decodeToken();
+        if (usuarioId) {
+            if (id == 1){
+                fetchData(usuarioId, 1);
+                //navigation.navigate("");
+            }else{
+                fetchData(usuarioId, 2);
+                //navigation.navigate("");
+            }
+        } else {
+            console.error('usuarioId no definido');
+        }
+    }
+    const fetchData = async (usuarioId,tipoTramiteId) => {   
+        
+        try {
+            const token = await AsyncStorage.getItem('authToken');
+            if (token !== null) {
+                const url = `${BASE_URL}/v1/tramites`;
+                const fechaInicio = new Date().toISOString(); 
+                console.log('Datos enviados: ',{usuarioId,tipoTramiteId,fechaInicio});
+                const token = await AsyncStorage.getItem('authToken');
+                const response = await fetch(url, { //cambiar segun la ip de cada uno
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        fechaInicio,
+                        tipoTramiteId,
+                        usuarioId
+                    }),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setTramites(data.tramiteResponse.tramite);
+                    console.log(data);
+                }else{
+                    console.error('Error en la respuesta:', response.status);
+                    console.error('Respuesta del servidor:', response);
+                }
+            }else{
+                console.log('token no encontrado');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setErrorMessage('Error en la conexión con el servidor.');
+        }
+    };
+
     return (
         <View style={styles.container}>
             {/* Logo y Título */}
@@ -17,12 +95,12 @@ const SeleccionTramite = () => {
             <View style={styles.divider} />
 
             {/* Botones de Trámite */}
-            <TouchableOpacity style={styles.tramiteButton}>
+            <TouchableOpacity style={styles.tramiteButton} onPress={()=>{handleInicio(1)}}>
                 <Text style={styles.tramiteButtonText}>Cambio de domicilio</Text>
                 <Text style={styles.tramiteButtonIcon}>🏠</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.tramiteButton}>
+            <TouchableOpacity style={styles.tramiteButton} onPress={()=>{handleInicio(2)}}>
                 <Text style={styles.tramiteButtonText}>Cambio de titular</Text>
                 <Text style={styles.tramiteButtonIcon}>👤</Text>
             </TouchableOpacity>

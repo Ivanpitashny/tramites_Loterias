@@ -1,7 +1,5 @@
 package com.example.tramite_de_loteria.config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -53,9 +49,9 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.DELETE,"/v1/usuarios/**").hasRole("ADMINISTRADOR")  
             // TRAMITES
             .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET, "/v1/tramites/*/usuarios").hasRole("AGENCIERO")
             .requestMatchers(HttpMethod.GET, "/v1/tramites/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.GET, "/usuarios/{id}/tramites").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.POST, "/v1/tramites").hasRole("ADMINISTRADOR")          
+            .requestMatchers(HttpMethod.POST, "/v1/tramites").hasRole("AGENCIERO")          
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })
         .addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class)

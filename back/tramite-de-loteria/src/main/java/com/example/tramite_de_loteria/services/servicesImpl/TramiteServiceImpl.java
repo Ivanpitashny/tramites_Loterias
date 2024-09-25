@@ -87,7 +87,6 @@ public class TramiteServiceImpl implements TramiteService{
         log.info("Inicio metodo obtenerTramitesPorIdUsuario");
         
         TramiteResponseRest response = new TramiteResponseRest();
-        List<Tramite> list = new ArrayList<>();
         
         try {
             // Utiliza el método findByUsuarioId para obtener los trámites del usuario
