@@ -18,7 +18,7 @@ const InicioTramites = () => {
     const [motive, setMotive] = useState('');
 
     const sendData = ()=>{
-        return 'hola';
+        console.log('hola');
     }
 return (
     <KeyboardAvoidingView
@@ -81,7 +81,7 @@ return (
                 <Button 
                     mode="contained"
                     title="ENVIAR SOLICITUD" 
-                    onPress={() => {sendData}} 
+                    onPress={sendData()} 
                     style={styles.newTramiteButton}
                     buttonColor="#ff5a00" 
                     textColor="#fff"  >
