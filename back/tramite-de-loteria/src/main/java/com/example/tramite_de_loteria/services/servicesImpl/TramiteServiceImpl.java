@@ -13,19 +13,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tramite_de_loteria.dao.TramiteDao;
-import com.example.tramite_de_loteria.model.TipoTramite;
 import com.example.tramite_de_loteria.model.Tramite;
 import com.example.tramite_de_loteria.response.TramiteResponseRest;
 import com.example.tramite_de_loteria.services.TramiteService;
-import com.example.tramite_de_loteria.services.TipoTramiteService;
 
 @Service
 public class TramiteServiceImpl implements TramiteService{
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
-
-    @Autowired
-    private TipoTramiteService tipoTramiteService;
 
     @Autowired
     private TramiteDao tramiteDao;
@@ -117,20 +112,10 @@ public class TramiteServiceImpl implements TramiteService{
         List<Tramite> list = new ArrayList<>();
         
         try {
-            List<TipoTramite> tiposTramite = tipoTramiteService.obtenerTodosLosTiposTramites();
-            boolean tipoTramiteValido= tiposTramite.stream()
-                .anyMatch(tipo -> tipo.getId().equals(tramite.getTipoTramiteId()));
-
-            if (tramite.getTipoTramiteId() != null && tipoTramiteValido) {
-                Tramite tramiteGuardado = tramiteDao.save(tramite);
-                if (tramiteGuardado != null) {
-                    list.add(tramiteGuardado);
-                    response.getTramiteResponse().setTramite(list);
-                }
-            } else {
-                log.error("Tipo de Tramite Invalido");
-                response.setMetada("Respuesta nok","-1", "Tipo de Tramite Invalido");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            Tramite tramiteGuardado = tramiteDao.save(tramite);
+            if (tramiteGuardado != null) {
+                list.add(tramiteGuardado);
+                response.getTramiteResponse().setTramite(list);
             }
         } catch (Exception e) {
             log.error("Error en grabar Tramite: ", e);
@@ -142,15 +127,73 @@ public class TramiteServiceImpl implements TramiteService{
     }
 
     @Override
-    public ResponseEntity<TramiteResponseRest> actualizarTramite(Tramite tramite, Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actualizarTramite'");
-    }
+public ResponseEntity<TramiteResponseRest> actualizarTramite(Tramite tramite, Integer id) {
+    log.info("Inicio metodo actualizarTramite");
+    TramiteResponseRest response = new TramiteResponseRest();
 
-    @Override
-    public ResponseEntity<TramiteResponseRest> eliminarTramite(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eliminarTramite'");
+    try {
+        Optional<Tramite> tramiteExistente = tramiteDao.findById(id);
+        
+        if (tramiteExistente.isPresent()) {
+            Tramite tramiteActualizado = tramiteExistente.get();
+            
+            tramiteActualizado.setTipo(tramite.getTipo());
+            tramiteActualizado.setEstado(tramite.getEstado());
+            tramiteActualizado.setFechaInicio(tramite.getFechaInicio());
+            tramiteActualizado.setFechaFin(tramite.getFechaFin());
+            tramiteActualizado.setUsuarioId(tramite.getUsuarioId());
+            tramiteActualizado.setNombre(tramite.getNombre());
+            tramiteActualizado.setNro_seguimiento(tramite.getNro_seguimiento());
+            tramiteActualizado.setMotivo(tramite.getMotivo());
+            tramiteActualizado.setLocalidad(tramite.getLocalidad());
+            tramiteActualizado.setPermiso(tramite.getPermiso());
+            tramiteActualizado.setAgente(tramite.getAgente());
+            tramiteActualizado.setSub_agente(tramite.getSub_agente());
+            tramiteActualizado.setRazon_social(tramite.getRazon_social());
+            tramiteActualizado.setDomicilio_comercial(tramite.getDomicilio_comercial());
+            tramiteActualizado.setObservaciones(tramite.getObservaciones());
+            
+            tramiteDao.save(tramiteActualizado);
+            
+            response.getTramiteResponse().setTramite(List.of(tramiteActualizado));
+            response.setMetada("Respuesta ok", "00", "Tramite actualizado");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            log.error("Tramite no encontrado con ID: " + id);
+            response.setMetada("Respuesta nok", "-1", "Tramite no encontrado");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    } catch (Exception e) {
+        log.error("Error al actualizar tramite: ", e);
+        response.setMetada("Respuesta nok", "-1", "Error al actualizar tramite");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
+
+@Override
+public ResponseEntity<TramiteResponseRest> eliminarTramite(Integer id) {
+    log.info("Inicio metodo eliminarTramite");
+    TramiteResponseRest response = new TramiteResponseRest();
+
+    try {
+        Optional<Tramite> tramiteExistente = tramiteDao.findById(id);
+        
+        if (tramiteExistente.isPresent()) {
+            tramiteDao.deleteById(id);
+            response.setMetada("Respuesta ok", "00", "Tramite eliminado con éxito");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            log.error("Tramite no encontrado con ID: " + id);
+            response.setMetada("Respuesta nok", "-1", "Tramite no encontrado");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    } catch (Exception e) {
+        log.error("Error al eliminar tramite: ", e);
+        response.setMetada("Respuesta nok", "-1", "Error al eliminar tramite");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
     
 }

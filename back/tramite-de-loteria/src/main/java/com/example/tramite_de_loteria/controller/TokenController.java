@@ -20,8 +20,6 @@ import com.example.tramite_de_loteria.response.TokenResponse;
 import com.example.tramite_de_loteria.services.JwtService;
 import com.example.tramite_de_loteria.services.servicesImpl.UsuarioServiceImpl;
 
-
-
 @RestController
 @RequestMapping("/v1")
 public class TokenController {

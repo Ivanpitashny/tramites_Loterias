@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -51,7 +53,9 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.GET, "/v1/tramites/*/usuarios").hasRole("AGENCIERO")
             .requestMatchers(HttpMethod.GET, "/v1/tramites/**").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.POST, "/v1/tramites").hasRole("AGENCIERO")          
+            .requestMatchers(HttpMethod.PUT, "/v1/tramites/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
+            .requestMatchers(HttpMethod.POST, "/v1/tramites").hasAnyRole("AGENCIERO","ADMINISTRADOR")
+            .requestMatchers(HttpMethod.DELETE, "/v1/tramites/**").hasRole("ADMINISTRADOR")
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
         })
         .addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class)
@@ -68,5 +72,10 @@ public class ConfigSecurity {
     AuthenticationManager authenticationManager(AuthenticationConfiguration 
             authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
