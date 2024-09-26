@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, SafeAreaView, Image, Platform, Pressable } from 'react-native';
+import { Text, SafeAreaView, Image, Platform, Pressable, Dimensions , StyleProp, ViewStyle} from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
 import { Keyboard } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
 import {jwtDecode} from 'jwt-decode';
 import { BASE_URL } from '../components/config';
+import { TextInput, Card } from 'react-native-paper';
 
 
 const Login = ({ navigation }) => {
-
+  const{width, height} = Dimensions.get('screen')
   const[usuario, setUsuario]= useState('');
   const[contrasenia, setContrasenia]= useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
 
@@ -75,30 +77,40 @@ const Login = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}
     >
-      <Pressable onPress={() => Keyboard.dismiss()}>
+      <Pressable style= {{flex:1}} onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Image 
-            style={{borderRadius:20 ,width: 200, height: 200, margin: 20, justifyContent: 'center' }}
+            style={{borderRadius:20 ,width: width*0.5, height: height*0.25, margin: 20, justifyContent: 'center' }}
             source={require('../images/logo_loteria.jpg')}
           />
           <Text style={{ fontSize: 24,marginTop: 40, fontWeight: 'bold', marginBottom: 20 }}>Trámites Loteria</Text>
-          
-          <CustomInput 
-            title="Usuario" 
-            holder="Ingrese su usuario" 
-            value={usuario}
-            onChangeText={text => setUsuario(text)}
-          />
+          <Card style={{ padding: 16, height: height*0.3}}>
+            <Card.Content>
+              <TextInput 
+              label="Usuario" 
+              mode='outlined'
+              holder="Ingrese su usuario" 
+              value={usuario}
+              onChangeText={text => setUsuario(text)}
+              style={{marginBottom:16, borderRadius: 100}}
+            />
 
-          <CustomInput 
-            title="Contraseña" 
-            holder="Ingrese su contraseña" 
-            inputType={2} 
-            value={contrasenia}
-            onChangeText={text => setContrasenia(text)} 
-          />
+            <TextInput 
+              label="Contraseña" 
+              holder="Ingrese su contraseña" 
+              mode='outlined'
+              value={contrasenia}
+              onChangeText={text => setContrasenia(text)} 
+              style={{marginBottom:16}}
+              secureTextEntry={!showPassword}
+              right={
+                <TextInput.Icon 
+                  icon={showPassword ? "eye-off" : "eye"}  // Cambia el ícono entre "eye" y "eye-off"
+                  onPress={() => setShowPassword(!showPassword)}  // Cambia el estado al hacer clic
+                />}
+            />
 
           <CustomButton   
             title="Ingresar"
@@ -108,7 +120,8 @@ const Login = ({ navigation }) => {
           {errorMessage ? (
             <Text style={{ color: 'red', marginTop: 10 }}>{errorMessage}</Text>
           ) : null}
-
+            </Card.Content>
+          </Card>
         </SafeAreaView>
       </Pressable>
     </KeyboardAvoidingView>

@@ -6,6 +6,7 @@ import HomeAgenciero from './assets/screens/HomeAgenciero';
 import SeleccionTramite from './assets/screens/SeleccionTramite';
 import HomeAdministrador from './assets/screens/HomeAdministrador';
 import InicioTramites from './assets/screens/InicioTramites';
+import Cambio from './assets/screens/Cambio';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const AppNavigation = () => {
                 <Stack.Screen name="SeleccionTramite" component={SeleccionTramite} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdministrador" component={HomeAdministrador} options={{ headerShown: false }} />
                 <Stack.Screen name="InicioTramites" component={InicioTramites} options={{ headerShown: false }} />
+                <Stack.Screen name="Cambio" component={Cambio} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

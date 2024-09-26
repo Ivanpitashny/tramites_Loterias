@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {jwtDecode} from 'jwt-decode';
 import { BASE_URL } from '../components/config';
 
-const SeleccionTramite = () => {
+const SeleccionTramite = ({navigation}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [tramites, setTramites] = useState([]);
     
@@ -31,54 +31,14 @@ const SeleccionTramite = () => {
         const usuarioId = await decodeToken();
         if (usuarioId) {
             if (id == 1){
-                fetchData(usuarioId, 1);
-                //navigation.navigate("");
+                navigation.navigate("Cambio",{tipo: 1});
             }else{
-                fetchData(usuarioId, 2);
-                //navigation.navigate("");
+                navigation.navigate("Cambio",{tipo: 2});
             }
         } else {
             console.error('usuarioId no definido');
         }
     }
-    const fetchData = async (usuarioId,tipoTramiteId) => {   
-        
-        try {
-            const token = await AsyncStorage.getItem('authToken');
-            if (token !== null) {
-                const url = `${BASE_URL}/v1/tramites`;
-                const fechaInicio = new Date().toISOString(); 
-                console.log('Datos enviados: ',{usuarioId,tipoTramiteId,fechaInicio});
-                const token = await AsyncStorage.getItem('authToken');
-                const response = await fetch(url, { //cambiar segun la ip de cada uno
-                    method: 'POST',
-                    headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        fechaInicio,
-                        tipoTramiteId,
-                        usuarioId
-                    }),
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setTramites(data.tramiteResponse.tramite);
-                    console.log(data);
-                }else{
-                    console.error('Error en la respuesta:', response.status);
-                    console.error('Respuesta del servidor:', response);
-                }
-            }else{
-                console.log('token no encontrado');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            setErrorMessage('Error en la conexión con el servidor.');
-        }
-    };
 
     return (
         <View style={styles.container}>
