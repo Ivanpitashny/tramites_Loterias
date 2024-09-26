@@ -51,3 +51,9 @@ React Navigation
 npm install @react-navigation/native @react-navigation/stack
 npm install react-native-gesture-handler react-native-reanimated
 npm install react-native-vector-icons
+
+
+
+back:
+https://bcrypt-generator.com/
+mvn spring-boot:run
