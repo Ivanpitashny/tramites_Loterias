@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Feather } from '@expo/vector-icons';
-import { View, Text, Image, StyleSheet, Platform, Pressable, SafeAreaView, BackHandler, TextInput, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, Platform, Pressable, SafeAreaView, BackHandler, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native-paper';
 import { KeyboardAvoidingView } from 'react-native';
 import { Keyboard } from 'react-native';
 import { BASE_URL } from '../components/config';
@@ -16,63 +17,79 @@ const InicioTramites = () => {
     const [contributionNumber, setContributionNumber] = useState('');
     const [motive, setMotive] = useState('');
 
+    const sendData = ()=>{
+        return 'hola';
+    }
 return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-    >
-    <Pressable onPress={() => Keyboard.dismiss()}>
-    <SafeAreaView style={styles.container}>
-        {/* Logo y Título */}
-        <View style={styles.header}>
-            <Feather name="chevron-left" size={24} color="black" onPress={BackHandler} style={styles.logoutIcon}/>
-            <Image
-                source={require('../images/logo_loteria.jpg')}
-                style={styles.logo}
-            />
-            <Text style={styles.title}>Inicio Tramite</Text>  
-        </View>
-        <View style={styles.container2}>
-            <Text style={styles.title2}>Cambio de Titular</Text>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width:'100%' }}>
+        <Pressable onPress={() => Keyboard.dismiss()}>
+            <SafeAreaView style={styles.container}>
+                {/* Logo y Título */}
+                <View style={styles.header}>
+                    <Feather name="chevron-left" size={24} color="black" onPress={BackHandler} style={styles.logoutIcon}/>
+                    <Image
+                        source={require('../images/logo_loteria.jpg')}
+                        style={styles.logo}
+                    />
+                    <Text style={styles.title}>Inicio Tramite</Text>  
+                </View>
+                <View style={styles.container2}>
+                    <Text style={styles.title2}>Cambio de Titular</Text>
 
-            <Text style={styles.label2}>Número de Cliente o CUIT/CUIL:</Text>
-            <TextInput
-                style={styles.input2}
-                placeholder="Número de Cliente o CUIT/CUIL"
-                value={customerNumber}
-                onChangeText={setCustomerNumber}
-            />
+                    <Text style={styles.label2}>Número de Cliente o CUIT/CUIL:</Text>
+                    <TextInput
+                        style={styles.input2}
+                        placeholder="Número de Cliente o CUIT/CUIL"
+                        value={customerNumber}
+                        onChangeText={setCustomerNumber}
+                    />
 
-            <Text style={styles.label2}>Dirección:</Text>
-            <TextInput
-                style={styles.input2}
-                placeholder="Dirección"
-                value={address}
-                onChangeText={setAddress}
-            />
+                    <Text style={styles.label2}>Dirección:</Text>
+                    <TextInput
+                        style={styles.input2}
+                        placeholder="Dirección"
+                        value={address}
+                        onChangeText={setAddress}
+                    />
 
-            <Text style={styles.label2}>Persona:</Text>
-            <View style={styles.radioContainer2}>
-                <Button
-                title="Juridica" onPress={() => {}} color="#FFA500"
-                />
-                <Button
-                title="Humana" onPress={() => {}} color="#FFA500"
-                />                
-            </View>
-            <Text style={styles.label2}>Motivo:</Text>
-            <TextInput
-                    style={styles.textArea2}
-                    placeholder="Motivo"
-                    value={motive}
-                    onChangeText={setMotive}
-                    multiline
-                />
-        </View>
-        <Button title="ENVIAR SOLICITUD" onPress={() => {}} color="#FFA500" />
-        {/* <Button title="ATRÁS" onPress={() => {}} color="#808080" /> */}
-    </SafeAreaView>
-    </Pressable>
+                    <Text style={styles.label2}>Persona:</Text>
+                    <View style={styles.radioContainer2}>
+                        <Button
+                            onPress={() => {setPersonType('juridica')}}buttonColor="#ff5a00" 
+                            textColor="#fff"
+                            style={{width:'45%'}}
+                        >Juridica</Button>  
+
+                        <Button
+                            onPress={() => {setPersonType('persona')}} 
+                            buttonColor="#ff5a00" 
+                            textColor="#fff"
+                            style={{width:'45%'}}
+                        >Persona</Button>               
+                    </View>
+                    <Text style={styles.label2}>Motivo:</Text>
+                    <TextInput
+                            style={styles.textArea2}
+                            placeholder="Motivo"
+                            value={motive}
+                            onChangeText={setMotive}
+                            multiline
+                        />
+                </View>
+                <Button 
+                    mode="contained"
+                    title="ENVIAR SOLICITUD" 
+                    onPress={() => {sendData}} 
+                    style={styles.newTramiteButton}
+                    buttonColor="#ff5a00" 
+                    textColor="#fff"  >
+                    ENVIAR SOLICITUD
+                </Button>
+                {/* <Button title="ATRÁS" onPress={() => {}} color="#808080" /> */}
+            </SafeAreaView>
+        </Pressable>
     </KeyboardAvoidingView>
 );
 };
@@ -151,8 +168,8 @@ const styles = StyleSheet.create({
     },
     logoutIcon: {
         position: 'absolute',
-        top: 35,
-        left: 16,
+        top: 15,
+        left: 10,
     },
     refreshIcon: {
         position: 'absolute',
@@ -161,6 +178,7 @@ const styles = StyleSheet.create({
     },
         container2: {
             padding: 20,
+            flex: 1
         },
         title2: {
             fontSize: 24,
@@ -177,6 +195,7 @@ const styles = StyleSheet.create({
             padding: 10,
             marginBottom: 15,
             borderRadius: 5,
+            width: 300
         },
         radioContainer2: {
             flexDirection: 'row',

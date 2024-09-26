@@ -7,9 +7,9 @@ export const globalTheme = StyleSheet.create({
         margin: 10,
     },
     input: {
-        height: 30, // Puedes ajustar este valor
-        fontSize: 14, // Aumenta ligeramente el tamaño de la fuente
-        backgroundColor: "#D9D9D9", // Asegúrate de que el color esté bien definido
+        height: 30, 
+        fontSize: 14, 
+        backgroundColor: "#D9D9D9", 
         textAlign: 'auto',
         width: 300,
         margin: 10, 
