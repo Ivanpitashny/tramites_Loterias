@@ -84,26 +84,25 @@ public class TramiteServiceImpl implements TramiteService{
         TramiteResponseRest response = new TramiteResponseRest();
         
         try {
-            // Utiliza el método findByUsuarioId para obtener los trámites del usuario
             List<Tramite> tramites = tramiteDao.findByUsuarioId(usuarioId);
             
             if (!tramites.isEmpty()) {
                 response.getTramiteResponse().setTramite(tramites);
+                response.setMetada("Respuesta ok", "00", "Tramites encontrados");
             } else {
-                log.error("No se encontraron tramites para el usuario con id " + usuarioId);
-                response.setMetada("Respuesta nok","-1", "No se encontraron tramites para el usuario");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                log.info("No se encontraron tramites para el usuario con id " + usuarioId);
+                response.setMetada("Respuesta ok", "01", "No se encontraron trámites para el usuario");
             }
             
         } catch (Exception e) {
             log.error("Error al consultar tramites por usuario", e);
-            response.setMetada("Respuesta nok","-1", "Error al consultar tramites por usuario");
+            response.setMetada("Respuesta nok", "-1", "Error al consultar tramites por usuario");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
-        response.setMetada("Respuesta ok", "00", "Tramites encontrados");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     @Override
     public ResponseEntity<TramiteResponseRest> crearTramite(Tramite tramite) {
@@ -127,73 +126,70 @@ public class TramiteServiceImpl implements TramiteService{
     }
 
     @Override
-public ResponseEntity<TramiteResponseRest> actualizarTramite(Tramite tramite, Integer id) {
-    log.info("Inicio metodo actualizarTramite");
-    TramiteResponseRest response = new TramiteResponseRest();
+    public ResponseEntity<TramiteResponseRest> actualizarTramite(Tramite tramite, Integer id) {
+        log.info("Inicio metodo actualizarTramite");
+        TramiteResponseRest response = new TramiteResponseRest();
 
-    try {
-        Optional<Tramite> tramiteExistente = tramiteDao.findById(id);
-        
-        if (tramiteExistente.isPresent()) {
-            Tramite tramiteActualizado = tramiteExistente.get();
+        try {
+            Optional<Tramite> tramiteExistente = tramiteDao.findById(id);
             
-            tramiteActualizado.setTipo(tramite.getTipo());
-            tramiteActualizado.setEstado(tramite.getEstado());
-            tramiteActualizado.setFechaInicio(tramite.getFechaInicio());
-            tramiteActualizado.setFechaFin(tramite.getFechaFin());
-            tramiteActualizado.setUsuarioId(tramite.getUsuarioId());
-            tramiteActualizado.setNombre(tramite.getNombre());
-            tramiteActualizado.setNro_seguimiento(tramite.getNro_seguimiento());
-            tramiteActualizado.setMotivo(tramite.getMotivo());
-            tramiteActualizado.setLocalidad(tramite.getLocalidad());
-            tramiteActualizado.setPermiso(tramite.getPermiso());
-            tramiteActualizado.setAgente(tramite.getAgente());
-            tramiteActualizado.setSub_agente(tramite.getSub_agente());
-            tramiteActualizado.setRazon_social(tramite.getRazon_social());
-            tramiteActualizado.setDomicilio_comercial(tramite.getDomicilio_comercial());
-            tramiteActualizado.setObservaciones(tramite.getObservaciones());
-            
-            tramiteDao.save(tramiteActualizado);
-            
-            response.getTramiteResponse().setTramite(List.of(tramiteActualizado));
-            response.setMetada("Respuesta ok", "00", "Tramite actualizado");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            log.error("Tramite no encontrado con ID: " + id);
-            response.setMetada("Respuesta nok", "-1", "Tramite no encontrado");
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            if (tramiteExistente.isPresent()) {
+                Tramite tramiteActualizado = tramiteExistente.get();
+                
+                tramiteActualizado.setTipo(tramite.getTipo());
+                tramiteActualizado.setEstado(tramite.getEstado());
+                tramiteActualizado.setFechaInicio(tramite.getFechaInicio());
+                tramiteActualizado.setFechaFin(tramite.getFechaFin());
+                tramiteActualizado.setUsuarioId(tramite.getUsuarioId());
+                tramiteActualizado.setNombre(tramite.getNombre());
+                tramiteActualizado.setNro_seguimiento(tramite.getNro_seguimiento());
+                tramiteActualizado.setMotivo(tramite.getMotivo());
+                tramiteActualizado.setLocalidad(tramite.getLocalidad());
+                tramiteActualizado.setPermiso(tramite.getPermiso());
+                tramiteActualizado.setAgente(tramite.getAgente());
+                tramiteActualizado.setSub_agente(tramite.getSub_agente());
+                tramiteActualizado.setRazon_social(tramite.getRazon_social());
+                tramiteActualizado.setDomicilio_comercial(tramite.getDomicilio_comercial());
+                tramiteActualizado.setObservaciones(tramite.getObservaciones());
+                
+                tramiteDao.save(tramiteActualizado);
+                
+                response.getTramiteResponse().setTramite(List.of(tramiteActualizado));
+                response.setMetada("Respuesta ok", "00", "Tramite actualizado");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                log.error("Tramite no encontrado con ID: " + id);
+                response.setMetada("Respuesta nok", "-1", "Tramite no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.error("Error al actualizar tramite: ", e);
+            response.setMetada("Respuesta nok", "-1", "Error al actualizar tramite");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    } catch (Exception e) {
-        log.error("Error al actualizar tramite: ", e);
-        response.setMetada("Respuesta nok", "-1", "Error al actualizar tramite");
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-}
 
+    @Override
+    public ResponseEntity<TramiteResponseRest> eliminarTramite(Integer id) {
+        log.info("Inicio metodo eliminarTramite");
+        TramiteResponseRest response = new TramiteResponseRest();
 
-@Override
-public ResponseEntity<TramiteResponseRest> eliminarTramite(Integer id) {
-    log.info("Inicio metodo eliminarTramite");
-    TramiteResponseRest response = new TramiteResponseRest();
-
-    try {
-        Optional<Tramite> tramiteExistente = tramiteDao.findById(id);
-        
-        if (tramiteExistente.isPresent()) {
-            tramiteDao.deleteById(id);
-            response.setMetada("Respuesta ok", "00", "Tramite eliminado con éxito");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            log.error("Tramite no encontrado con ID: " + id);
-            response.setMetada("Respuesta nok", "-1", "Tramite no encontrado");
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        try {
+            Optional<Tramite> tramiteExistente = tramiteDao.findById(id);
+            
+            if (tramiteExistente.isPresent()) {
+                tramiteDao.deleteById(id);
+                response.setMetada("Respuesta ok", "00", "Tramite eliminado con éxito");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                log.error("Tramite no encontrado con ID: " + id);
+                response.setMetada("Respuesta nok", "-1", "Tramite no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.error("Error al eliminar tramite: ", e);
+            response.setMetada("Respuesta nok", "-1", "Error al eliminar tramite");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    } catch (Exception e) {
-        log.error("Error al eliminar tramite: ", e);
-        response.setMetada("Respuesta nok", "-1", "Error al eliminar tramite");
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-}
-
-    
 }
