@@ -1,4 +1,4 @@
--- Active: 1722358145282@@127.0.0.1@3306@tramite_de_loteria
+
 CREATE DATABASE IF NOT EXISTS tramite_de_loteria;
 
 USE tramite_de_loteria;
