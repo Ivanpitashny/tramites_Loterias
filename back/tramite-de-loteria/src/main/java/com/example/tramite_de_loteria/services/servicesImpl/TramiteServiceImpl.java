@@ -141,16 +141,6 @@ public class TramiteServiceImpl implements TramiteService{
                 tramiteActualizado.setFechaInicio(tramite.getFechaInicio());
                 tramiteActualizado.setFechaFin(tramite.getFechaFin());
                 tramiteActualizado.setUsuarioId(tramite.getUsuarioId());
-                tramiteActualizado.setNombre(tramite.getNombre());
-                tramiteActualizado.setNro_seguimiento(tramite.getNro_seguimiento());
-                tramiteActualizado.setMotivo(tramite.getMotivo());
-                tramiteActualizado.setLocalidad(tramite.getLocalidad());
-                tramiteActualizado.setPermiso(tramite.getPermiso());
-                tramiteActualizado.setAgente(tramite.getAgente());
-                tramiteActualizado.setSub_agente(tramite.getSub_agente());
-                tramiteActualizado.setRazon_social(tramite.getRazon_social());
-                tramiteActualizado.setDomicilio_comercial(tramite.getDomicilio_comercial());
-                tramiteActualizado.setObservaciones(tramite.getObservaciones());
                 
                 tramiteDao.save(tramiteActualizado);
                 

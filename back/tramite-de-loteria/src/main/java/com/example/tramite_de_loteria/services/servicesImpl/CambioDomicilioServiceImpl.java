@@ -18,7 +18,7 @@ import com.example.tramite_de_loteria.response.CambioDomicilioResponseRest;
 import com.example.tramite_de_loteria.services.CambioDomicilioService;
 
 @Service
-public class CambioDomicilioServiceImpl implements CambioDomicilioService{
+public class CambioDomicilioServiceImpl implements CambioDomicilioService {
 
     private static final Logger log = LoggerFactory.getLogger(CambioDomicilioServiceImpl.class);
 
@@ -105,6 +105,15 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService{
             if (cambioDomicilioExistente.isPresent()) {
                 CambioDomicilio cambioDomicilioActualizado = cambioDomicilioExistente.get();
 
+                cambioDomicilioActualizado.setNro_seguimiento(cambioDomicilio.getNro_seguimiento());
+                cambioDomicilioActualizado.setMotivo(cambioDomicilio.getMotivo());
+                cambioDomicilioActualizado.setLocalidad(cambioDomicilio.getLocalidad());
+                cambioDomicilioActualizado.setPermiso(cambioDomicilio.getPermiso());
+                cambioDomicilioActualizado.setAgente(cambioDomicilio.getAgente());
+                cambioDomicilioActualizado.setSub_agente(cambioDomicilio.getSub_agente());
+                cambioDomicilioActualizado.setRazon_social(cambioDomicilio.getRazon_social());
+                cambioDomicilioActualizado.setDomicilio_comercial(cambioDomicilio.getDomicilio_comercial());
+                cambioDomicilioActualizado.setObservaciones(cambioDomicilio.getObservaciones());
                 cambioDomicilioActualizado.setNuevoDomicilio(cambioDomicilio.getNuevoDomicilio());
                 cambioDomicilioActualizado.setNuevoDomicilioEstado(cambioDomicilio.getNuevoDomicilioEstado());
                 cambioDomicilioActualizado.setSuperficie(cambioDomicilio.getSuperficie());
@@ -121,7 +130,7 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService{
                 cambioDomicilioActualizado.setRecaudacionEstimadaEstado(cambioDomicilio.getRecaudacionEstimadaEstado());
                 cambioDomicilioActualizado.setDireccion(cambioDomicilio.getDireccion());
                 cambioDomicilioActualizado.setDireccionEstado(cambioDomicilio.getDireccionEstado());
-                cambioDomicilioActualizado.setLocalidad(cambioDomicilio.getLocalidad());
+                cambioDomicilioActualizado.setLocalidadDa(cambioDomicilio.getLocalidadDa());
                 cambioDomicilioActualizado.setLocalidadEstado(cambioDomicilio.getLocalidadEstado());
                 cambioDomicilioActualizado.setDepartamento(cambioDomicilio.getDepartamento());
                 cambioDomicilioActualizado.setDepartamentoEstado(cambioDomicilio.getDepartamentoEstado());
@@ -130,7 +139,6 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService{
 
                 response.getCambioDomicilioResponse().setCambioDomicilio(List.of(cambioDomicilioActualizado));
                 response.setMetada("Respuesta ok", "00", "Cambio de domicilio actualizado");
-                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 log.error("Cambio de domicilio no encontrado con ID: " + id);
                 response.setMetada("Respuesta nok", "-1", "Cambio de domicilio no encontrado");
@@ -141,6 +149,8 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService{
             response.setMetada("Respuesta nok", "-1", "Error al actualizar cambio de domicilio");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
@@ -150,16 +160,8 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService{
         CambioDomicilioResponseRest response = new CambioDomicilioResponseRest();
 
         try {
-            Optional<CambioDomicilio> cambioDomicilioExistente = cambioDomicilioDao.findById(id);
-
-            if (cambioDomicilioExistente.isPresent()) {
-                cambioDomicilioDao.deleteById(id);
-                response.setMetada("Respuesta ok", "00", "Cambio de domicilio eliminado con éxito");
-            } else {
-                log.error("Cambio de domicilio no encontrado con ID: " + id);
-                response.setMetada("Respuesta nok", "-1", "Cambio de domicilio no encontrado");
-                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-            }
+            cambioDomicilioDao.deleteById(id);
+            response.setMetada("Respuesta ok", "00", "Cambio de domicilio eliminado");
         } catch (Exception e) {
             log.error("Error al eliminar cambio de domicilio: ", e);
             response.setMetada("Respuesta nok", "-1", "Error al eliminar cambio de domicilio");
@@ -168,5 +170,4 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService{
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
 }

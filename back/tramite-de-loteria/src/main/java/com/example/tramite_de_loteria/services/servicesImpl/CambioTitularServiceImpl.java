@@ -30,7 +30,7 @@ public class CambioTitularServiceImpl implements CambioTitularService{
     public ResponseEntity<CambioTitularResponseRest> obtenerCambioTitular() {
         log.info("Inicio método obtenerCambioTitular");
         CambioTitularResponseRest response = new CambioTitularResponseRest();
-            
+        
         try {
             List<CambioTitular> cambioTitularList = (List<CambioTitular>) cambioTitularDao.findAll();
             response.getCambioTitularResponse().setCambioTitular(cambioTitularList);
@@ -40,7 +40,7 @@ public class CambioTitularServiceImpl implements CambioTitularService{
             response.setMetada("Respuesta nok", "-1", "Error al obtener cambios de titular");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-            
+        
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -50,10 +50,10 @@ public class CambioTitularServiceImpl implements CambioTitularService{
         log.info("Inicio método obtenerCambioTitularPorId");
         CambioTitularResponseRest response = new CambioTitularResponseRest();
         List<CambioTitular> list = new ArrayList<>();
-            
+        
         try {
             Optional<CambioTitular> cambioTitular = cambioTitularDao.findById(id);
-                
+            
             if (cambioTitular.isPresent()) {
                 list.add(cambioTitular.get());
                 response.getCambioTitularResponse().setCambioTitular(list);
@@ -68,7 +68,7 @@ public class CambioTitularServiceImpl implements CambioTitularService{
             response.setMetada("Respuesta nok", "-1", "Error al obtener cambio de titular");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-            
+        
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -78,7 +78,7 @@ public class CambioTitularServiceImpl implements CambioTitularService{
         log.info("Inicio método crearCambioTitular");
         CambioTitularResponseRest response = new CambioTitularResponseRest();
         List<CambioTitular> list = new ArrayList<>();
-            
+        
         try {
             CambioTitular cambioTitularGuardado = cambioTitularDao.save(cambioTitular);
             list.add(cambioTitularGuardado);
@@ -89,7 +89,7 @@ public class CambioTitularServiceImpl implements CambioTitularService{
             response.setMetada("Respuesta nok", "-1", "Error al crear cambio de titular");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-            
+        
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -98,13 +98,22 @@ public class CambioTitularServiceImpl implements CambioTitularService{
     public ResponseEntity<CambioTitularResponseRest> actualizarCambioTitular(CambioTitular cambioTitular, Integer id) {
         log.info("Inicio método actualizarCambioTitular");
         CambioTitularResponseRest response = new CambioTitularResponseRest();
-            
+        
         try {
             Optional<CambioTitular> cambioTitularExistente = cambioTitularDao.findById(id);
-                
+            
             if (cambioTitularExistente.isPresent()) {
                 CambioTitular cambioTitularActualizado = cambioTitularExistente.get();
-                    
+                
+                cambioTitularActualizado.setNro_seguimiento(cambioTitular.getNro_seguimiento());
+                cambioTitularActualizado.setMotivo(cambioTitular.getMotivo());
+                cambioTitularActualizado.setLocalidad(cambioTitular.getLocalidad());
+                cambioTitularActualizado.setPermiso(cambioTitular.getPermiso());
+                cambioTitularActualizado.setAgente(cambioTitular.getAgente());
+                cambioTitularActualizado.setSub_agente(cambioTitular.getSub_agente());
+                cambioTitularActualizado.setRazon_social(cambioTitular.getRazon_social());
+                cambioTitularActualizado.setDomicilio_comercial(cambioTitular.getDomicilio_comercial());
+                cambioTitularActualizado.setObservaciones(cambioTitular.getObservaciones());
                 cambioTitularActualizado.setNuevoTitular(cambioTitular.getNuevoTitular());
                 cambioTitularActualizado.setNuevoTitularEstado(cambioTitular.getNuevoTitularEstado());
                 cambioTitularActualizado.setDniNuevoTitular(cambioTitular.getDniNuevoTitular());
@@ -146,10 +155,10 @@ public class CambioTitularServiceImpl implements CambioTitularService{
     public ResponseEntity<CambioTitularResponseRest> eliminarCambioTitular(Integer id) {
         log.info("Inicio método eliminarCambioTitular");
         CambioTitularResponseRest response = new CambioTitularResponseRest();
-            
+        
         try {
             Optional<CambioTitular> cambioTitularExistente = cambioTitularDao.findById(id);
-                
+            
             if (cambioTitularExistente.isPresent()) {
                 cambioTitularDao.deleteById(id);
                 response.setMetada("Respuesta ok", "00", "Cambio de titular eliminado con éxito");
@@ -163,8 +172,7 @@ public class CambioTitularServiceImpl implements CambioTitularService{
             response.setMetada("Respuesta nok", "-1", "Error al eliminar cambio de titular");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-            
+        
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-        
 }
