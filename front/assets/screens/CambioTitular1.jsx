@@ -1,35 +1,67 @@
 import * as React from 'react';
 import { View, StyleSheet,Image,Text, SafeAreaView } from 'react-native';
 import { Appbar, TextInput, Button, IconButton } from 'react-native-paper';
+import {jwtDecode} from 'jwt-decode';
 import * as DocumentPicker from 'expo-document-picker';
 import { ActivityIndicator } from 'react-native';
+import { BASE_URL } from '../components/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CambioDeTitular1 = () => {
+const CambioDeTitular1 = ({ navigation }) => {
     const [nombre, setNombre] = React.useState('');
     const [identificacion, setIdentificacion] = React.useState('');
     const [registroCivil, setRegistroCivil] = React.useState('');
     const [file, setFile] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [step, setStep] = useState(1);
+
+    const nextStep = () =>{
+        setStep(step+1);
+      };
+    
+      const prevStep = () =>{
+        setStep(step-1);
+      };
+    
+    const decodeToken = async () =>{
+      try {
+          const storedToken = await AsyncStorage.getItem('authToken');
+          const decodedToken = jwtDecode(storedToken);
+          //console.log('Token decodificado:', decodedToken);
+  
+          // Extraer userId del token
+          const userId = decodedToken.userId; // Asegúrate de que el token tenga el campo userId
+          if (userId) {
+              await fetchData(userId); // Pasamos el userId correctamente a fetchData
+          } else {
+              console.error('userId no encontrado en el token.');
+          }
+      } catch (decodeError) {
+          console.error('Error al decodificar el token:', decodeError);
+          setErrorMessage('Error al decodificar el token.');
+      }
+  }
 
     const pickDocument = async () => {
-        console.log('pickDocument called');
-        setLoading(true);
-        try {
+      console.log('pickDocument called');
+      setLoading(true);
+      try {
           const res = await DocumentPicker.getDocumentAsync({});
           console.log('File selection result:', res);
-          if (!res.canceled) {
-            const file = res.assets[0].file; // Get the file object from the assets array
-            setFile(file);
-            console.log(file);
+          if (!res.canceled && res.assets && res.assets.length > 0) {
+              const file = res.assets[0]; // Access the file object directly
+              setFile(file);
+              console.log(file);
           }
-        } catch (err) {
+      } catch (err) {
           console.error(err);
-        } finally {
+      } finally {
           setLoading(false);
-        }
-      };
+      }
+  };
+  
 
-      const uploadFile = async () => {
+      const insertData = async () => {
         if (!file) {
           Alert.alert('No file selected', 'Please select a file first');
           return;
@@ -43,11 +75,14 @@ const CambioDeTitular1 = () => {
         });
     
         try {
-          const response = await fetch('http://localhost:3000/upload', {
+          const response = await fetch(`${BASE_URL}/v1/tramites/`, {
             method: 'POST',
             body: formData,
             headers: {
               'Content-Type': 'multipart/form-data',
+              nombre,
+              registroCivil,
+              identificacion
             },
           });
     
@@ -87,23 +122,29 @@ return (
                 </View>
     <View style={styles.form}>
         <TextInput
-            label="Nombre Completo"
-            value={nombre}
-            onChangeText={text => setNombre(text)}
-            style={styles.input}
-        />
-        <TextInput
-            label="N° Identificación"
-            value={identificacion}
-            onChangeText={text => setIdentificacion(text)}
-            style={styles.input}
-        />
-        <TextInput
-            label="N° Registro Civil o Tarjeta"
-            value={registroCivil}
-            onChangeText={text => setRegistroCivil(text)}
-            style={styles.input}
-        />
+              label="Nombre Completo"
+              value={nombre}
+              mode="outlined"
+              style={styles.input}
+              onChangeText={text => setNombre(text)} 
+              activeOutlineColor= "#ff5a00"
+            />
+            <TextInput
+              label="N° Identificación"
+              value={identificacion}
+              mode="outlined"
+              style={styles.input}
+              onChangeText={text => setIdentificacion(text)} 
+              activeOutlineColor= "#ff5a00"
+            />
+            <TextInput
+              label="N° Registro Civil o Tarjeta"
+              value={registroCivil}
+              mode="outlined"
+              style={styles.input}
+              onChangeText={text => setRegistroCivil(text)} 
+              activeOutlineColor= "#ff5a00"
+            />
         <View style={styles.iconContainer}>
             <IconButton icon="upload" size={40}
             onPress={pickDocument}/>
@@ -114,17 +155,17 @@ return (
         <View style={styles.footer}>
             <Button 
                 mode="outlined" 
-                onPress={() => console.log('Cancelar')} 
+                onPress={() => navigation.navigate('HomeAgenciero')} 
                 style={styles.button}>
                 CANCELAR
             </Button>
             <Button 
                 mode="contained" 
-                onPress={() => console.log('Tramitar Registro')} 
+                onPress={() => navigation.navigate('CambioTitular2')} 
                 style={styles.button}
                 buttonColor="#ff5a00" 
                 textColor="#fff">
-                TRAMITAR REGISTRO
+                Siguiente
             </Button>
         </View>
     </SafeAreaView>
