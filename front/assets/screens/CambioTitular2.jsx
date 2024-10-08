@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import {useState, useEffect} from 'react';
+import { View, StyleSheet, Image, Text, SafeAreaView, Alert, Platform, Pressable, Keyboard } from 'react-native';
+import { TextInput, Button, IconButton, ActivityIndicator } from 'react-native-paper';
+import * as DocumentPicker from 'expo-document-picker';
 import { Feather } from '@expo/vector-icons';
-import { View, Text, Image, StyleSheet, Platform, Pressable, SafeAreaView, BackHandler, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button } from 'react-native-paper';
 import { KeyboardAvoidingView } from 'react-native';
-import { Keyboard } from 'react-native';
 import { BASE_URL } from '../components/config';
-import CustomInput from '../components/CustomInput';
-const InicioTramites = ({navigation}) => {
+
+const CambioTitular2 = ({route,navigation}) => {
     const[motivo, setMotivo]= useState('');
     const[localidad, setLocalidad]= useState('');
     const[agente, setAgente]= useState('');
@@ -16,12 +16,25 @@ const InicioTramites = ({navigation}) => {
     const [personType, setPersonType] = useState('');
     const [contributionNumber, setContributionNumber] = useState('');
     const [motive, setMotive] = useState('');
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const sendData = ()=>{
         console.log('hola');
     }
-    const handleBackPress = () => {
-        navigation.goBack(); // Navigate back to the previous screen
+    const pickDocument = async () => {
+        setLoading(true);
+        try {
+            const res = await DocumentPicker.getDocumentAsync({});
+            if (!res.canceled && res.assets && res.assets.length > 0) {
+                const file = res.assets[0];
+                setFile(file);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 return (
     <KeyboardAvoidingView
@@ -31,61 +44,76 @@ return (
             <SafeAreaView style={styles.container}>
                 {/* Logo y Título */}
                 <View style={styles.header}>
-                    <Feather 
-                    name="chevron-left" 
-                    size={24} 
-                    color="black" 
-                    onPress={handleBackPress} 
-                    style={styles.logoutIcon}/>
+                    {/* <Feather name="chevron-left" size={24} color="black" onPress={BackHandler} style={styles.logoutIcon}/> */}
                     <Image
                         source={require('../images/logo_loteria.jpg')}
                         style={styles.logo}
                     />
                     <Text style={styles.title}>Inicio Tramite</Text>  
                 </View>
-                <View style={styles.container2}>
-                    <Text style={styles.title2}>Cambio de Titular</Text>
-
-                    <Text style={styles.label2}>Número de Cliente o CUIT/CUIL:</Text>
-                    <TextInput
-                        style={styles.input2}
-                        placeholder="Número de Cliente o CUIT/CUIL"
-                        value={customerNumber}
-                        onChangeText={setCustomerNumber}
-                    />
-
-                    <Text style={styles.label2}>Dirección:</Text>
-                    <TextInput
-                        style={styles.input2}
-                        placeholder="Dirección"
-                        value={address}
-                        onChangeText={setAddress}
-                    />
-
-                    <Text style={styles.label2}>Persona:</Text>
-                    <View style={styles.radioContainer2}>
-                        <Button
-                            onPress={() => {setPersonType('juridica')}}buttonColor="#ff5a00" 
-                            textColor="#fff"
-                            style={{width:'45%'}}
-                        >Juridica</Button>  
-
-                        <Button
-                            onPress={() => {setPersonType('persona')}} 
-                            buttonColor="#ff5a00" 
-                            textColor="#fff"
-                            style={{width:'45%'}}
-                        >Persona</Button>               
+                <View style={styles.iconContainer}>
+                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#0000ff" />
+                        ) : (
+                            <Button mode="text" onPress={pickDocument}>
+                                {file ? file.name : 'Sellados'}
+                            </Button>
+                        )}
                     </View>
-                    <Text style={styles.label2}>Motivo:</Text>
-                    <TextInput
-                            style={styles.textArea2}
-                            placeholder="Motivo"
-                            value={motive}
-                            onChangeText={setMotive}
-                            multiline
-                        />
-                </View>
+                    <View style={styles.iconContainer}>
+                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#0000ff" />
+                        ) : (
+                            <Button mode="text" onPress={pickDocument}>
+                                {file ? file.name : 'DNI Nuevo Permisario'}
+                            </Button>
+                        )}
+                    </View>
+                    <View style={styles.iconContainer}>
+                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#0000ff" />
+                        ) : (
+                            <Button mode="text" onPress={pickDocument}>
+                                {file ? file.name : 'Certificado de Conducta Titular Propuesta'}
+                            </Button>
+                        )}
+                    </View>
+                    <View style={styles.iconContainer}>
+                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#0000ff" />
+                        ) : (
+                            <Button mode="text" onPress={pickDocument}>
+                                <Text>
+                                    {file ? file.name : 'Certificado Negativo del Registro de Deudores alimentarios'}
+                                </Text>
+                            </Button>
+                        )}
+                    </View>
+
+                    <View style={styles.iconContainer}>
+                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#0000ff" />
+                        ) : (
+                            <Button mode="text" onPress={pickDocument}>
+                                {file ? file.name : 'Nota Libre Deuda'}
+                            </Button>
+                        )}
+                    </View>
+                    <View style={styles.iconContainer}>
+                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#0000ff" />
+                        ) : (
+                            <Button mode="text" onPress={pickDocument}>
+                                {file ? file.name : 'Imagen Interior Local'}
+                            </Button>
+                        )}
+                    </View>
                 <Button 
                     mode="contained"
                     title="ENVIAR SOLICITUD" 
@@ -108,6 +136,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%',
         height: 'auto'
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 16,
+        width: 'auto',
+        height:'auto'
     },
     header: {
         marginTop: 10,
@@ -227,4 +262,4 @@ const styles = StyleSheet.create({
         },
 });
 
-export default InicioTramites;
+export default CambioTitular2;

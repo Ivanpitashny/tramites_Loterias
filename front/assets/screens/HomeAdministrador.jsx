@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Feather } from '@expo/vector-icons';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../components/config';
 
@@ -9,6 +10,11 @@ const HomeAdministrador = ({ navigation }) => {
     const [tramites, setTramites] = useState([]);  // Estado para los trámites
     const [errorMessage, setErrorMessage] = useState(null); 
 
+    const screenWidth = Dimensions.get('window').width;
+
+    const calculateColumnWidth = (percentage) => {
+    return screenWidth * (percentage / 100);
+    };
     const fetchData = async () => {    
         try {
             const token = await AsyncStorage.getItem('authToken');
@@ -41,14 +47,28 @@ const HomeAdministrador = ({ navigation }) => {
         fetchData();
       },[]);
 
+    const getColorByEstado = (estado) => {
+        switch (estado) {
+        case 'Para Revisión':
+            return 'lightblue';
+        case 'Rechazado':
+            return 'lightcoral';
+        case 'Aprobado':
+            return 'lightgreen';
+        default:
+            return 'white';
+        }
+    };
+    
     const renderTramite = ({ item }) => (
         <View style={styles.row}>
-            <Text style={styles.cell}>{item.id}</Text>
-            <Text style={styles.cell}>{item.fechaInicio}</Text>
-            <Text style={styles.cell}>{item.estado}</Text>
-            <TouchableOpacity style={styles.editButton}>
-                <Text>✏️</Text>
-            </TouchableOpacity>
+        <Text style={[styles.cell, { width: calculateColumnWidth(25)}]}>{item.nombre}</Text>
+        <Text style={[styles.cell, { width: calculateColumnWidth(20) }]}>{item.id}</Text>
+        <Text style={[styles.cell, { width: calculateColumnWidth(20) }]}>{item.fechaInicio}</Text>
+        <Text style={[styles.cell, { width: calculateColumnWidth(20), backgroundColor: '#cfcfcf', borderRadius: 1000, color: getColorByEstado(item.estado) }]}>{item.estado}</Text>
+        <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('RevisionTitular1', { tramiteId: item.id })}>
+            <Text>✏️</Text>
+        </TouchableOpacity>
         </View>
     );
 
@@ -87,10 +107,11 @@ const HomeAdministrador = ({ navigation }) => {
             {/* Lista de Trámites */}
             <View style={styles.table}>
                 <View style={styles.tableHeader}>
-                    <Text style={styles.headerText}>N° Comprobante</Text>
-                    <Text style={styles.headerText}>Fecha</Text>
-                    <Text style={styles.headerText}>Estado</Text>
-                    <Text style={styles.headerText}>Editar</Text>
+                    <Text style={[styles.headerText, { width: calculateColumnWidth(25) }]}>Tipo</Text>
+                    <Text style={[styles.headerText, { width: calculateColumnWidth(20) }]}>N° Comprobante</Text>
+                    <Text style={[styles.headerText, { width: calculateColumnWidth(20),textAlign:'center' }]}>Fecha</Text>
+                    <Text style={[styles.headerText, { width: calculateColumnWidth(20),textAlign:'center' }]}>Estado</Text>
+                    <Text style={[styles.headerText, { width: calculateColumnWidth(10),textAlign:'right' }]}>Editar</Text>
                 </View>
                 <FlatList
                     data={tramites}
@@ -149,7 +170,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f5f5f5',
         borderRadius: 10,
-        paddingHorizontal: 5,
+        paddingHorizontal: 2,
         paddingBottom: 10,
     },
     tableHeader: {
@@ -161,7 +182,6 @@ const styles = StyleSheet.create({
     headerText: {
         flex: 1,
         fontWeight: 'bold',
-        textAlign: 'center',
     },
     row: {
         flexDirection: 'row',
@@ -175,7 +195,7 @@ const styles = StyleSheet.create({
     },
     cell: {
         flex: 1,
-        textAlign: 'center',
+        textAlign: 'left',
     },
     editButton: {
         flex: 0.5,
