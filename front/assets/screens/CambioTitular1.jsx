@@ -113,7 +113,7 @@ const CambioDeTitular1 = ({ navigation }) => {
       motive: motive,                   // Motivo
       // Puedes agregar aquí el userId si lo obtienes de AsyncStorage
   };
-
+  navigation.navigate('HomeAgenciero');
   console.log("Datos a enviar:", data);
 };
 
@@ -208,7 +208,7 @@ const CambioDeTitular1 = ({ navigation }) => {
                                   source={require('../images/logo_loteria.jpg')}
                                   style={styles.logo}
                               />
-                              <Text style={styles.title}>Inicio <Tramite></Tramite></Text>
+                              <Text style={styles.title}>Inicio </Text>
                           </View>
                           <View style={styles.container2}>
                               <TextInput
