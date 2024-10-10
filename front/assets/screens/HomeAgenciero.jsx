@@ -68,7 +68,8 @@ const HomeAgenciero = ({ navigation }) => {
             <Text style={styles.cell}>{item.id}</Text>
             <Text style={styles.cell}>{item.fechaInicio}</Text>
             <Text style={styles.cell}>{item.estado}</Text>
-            <TouchableOpacity style={styles.editButton}>
+            <TouchableOpacity style={styles.editButton}
+            onPress={()=> navigation.navigate('CambioTitular2',{tramiteId: id})}>
                 <Text>✏️</Text>
             </TouchableOpacity>
         </View>

@@ -33,7 +33,7 @@ const SeleccionTramite = ({navigation}) => {
             if (id == 1){
                 navigation.navigate("Cambio",{tipo: 1});
             }else{
-                navigation.navigate("Cambio",{tipo: 2});
+                navigation.navigate("CambioDeTitular1",{tipo: 2});
             }
         } else {
             console.error('usuarioId no definido');

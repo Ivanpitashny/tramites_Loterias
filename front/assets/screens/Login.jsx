@@ -95,6 +95,7 @@ const Login = ({ navigation }) => {
               value={usuario}
               onChangeText={text => setUsuario(text)}
               style={{marginBottom:16, borderRadius: 100}}
+              activeOutlineColor= "#ff5a00"
             />
 
             <TextInput 
@@ -110,6 +111,7 @@ const Login = ({ navigation }) => {
                   icon={showPassword ? "eye-off" : "eye"}  // Cambia el ícono entre "eye" y "eye-off"
                   onPress={() => setShowPassword(!showPassword)}  // Cambia el estado al hacer clic
                 />}
+                activeOutlineColor= "#ff5a00"
             />
 
           <CustomButton   
