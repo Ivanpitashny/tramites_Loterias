@@ -17,9 +17,18 @@ public class CambioTitular {
         super();
     }
 
-    public CambioTitular(Integer id, Tramite tramite, String nuevoTitular, Integer nuevoTitularEstado, String dniNuevoTitular, Integer dniNuevoTitularEstado, String certificadoConducta, Integer certificadoConductaEstado, String certificadoRegistroDeudores, Integer certificadoRegistroDeudoresEstado, String notaLibreDeuda, Integer notaLibreDeudaEstado, String contratoSocial, Integer contratoSocialEstado, String estatuto, Integer estatutoEstado, String objetoSocial, Integer objetoSocialEstado, String cuentaBancaria, Integer cuentaBancariaEstado){
+    public CambioTitular(Integer id, Tramite tramite,  Integer nro_seguimiento, String motivo, String localidad, Integer permiso, String agente, String sub_agente, String razon_social, String domicilio_comercial, String observaciones, String nuevoTitular, Integer nuevoTitularEstado, String dniNuevoTitular, Integer dniNuevoTitularEstado, String certificadoConducta, Integer certificadoConductaEstado, String certificadoRegistroDeudores, Integer certificadoRegistroDeudoresEstado, String notaLibreDeuda, Integer notaLibreDeudaEstado, String contratoSocial, Integer contratoSocialEstado, String estatuto, Integer estatutoEstado, String objetoSocial, Integer objetoSocialEstado, String cuentaBancaria, Integer cuentaBancariaEstado){
         this.id = id;
         this.tramite = tramite;
+        this.nro_seguimiento = nro_seguimiento;
+        this.motivo = motivo;
+        this.localidad = localidad;
+        this.permiso = permiso;
+        this.agente = agente;
+        this.sub_agente = sub_agente;
+        this.razon_social = razon_social;
+        this.domicilio_comercial = domicilio_comercial;
+        this.observaciones = observaciones;
         this.nuevoTitular = nuevoTitular;
         this.nuevoTitularEstado = nuevoTitularEstado;
         this.dniNuevoTitular = dniNuevoTitular;
@@ -48,6 +57,33 @@ public class CambioTitular {
     @ManyToOne
     @JoinColumn(name = "t_id")
     private Tramite tramite;
+
+    @Column(name = "t_nro_seguimiento")
+    private Integer nro_seguimiento;
+
+    @Column(name = "t_motivo")
+    private String motivo;
+
+    @Column(name = "t_localidad")
+    private String localidad;
+
+    @Column(name = "t_permiso")
+    private Integer permiso;
+
+    @Column(name = "t_agente")
+    private String agente;
+
+    @Column(name = "t_sub_agente")
+    private String sub_agente;
+
+    @Column(name = "t_razon_social")
+    private String razon_social;
+
+    @Column(name = "t_domicilio_comercial")
+    private String domicilio_comercial;
+
+    @Column(name = "t_observaciones")
+    private String observaciones;
 
     @Column(name = "ct_nuevo_titular")
     private String nuevoTitular;
@@ -117,6 +153,78 @@ public class CambioTitular {
 
     public void setTramite(Tramite tramite) {
         this.tramite = tramite;
+    }
+
+    public Integer getNro_seguimiento() {
+        return nro_seguimiento;
+    }
+
+    public void setNro_seguimiento(Integer nro_seguimiento) {
+        this.nro_seguimiento = nro_seguimiento;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public String getLocalidad() {
+        return localidad;
+    }
+
+    public void setLocalidad(String localidad) {
+        this.localidad = localidad;
+    }
+
+    public Integer getPermiso() {
+        return permiso;
+    }
+
+    public void setPermiso(Integer permiso) {
+        this.permiso = permiso;
+    }
+
+    public String getAgente() {
+        return agente;
+    }
+
+    public void setAgente(String agente) {
+        this.agente = agente;
+    }
+
+    public String getSub_agente() {
+        return sub_agente;
+    }
+
+    public void setSub_agente(String sub_agente) {
+        this.sub_agente = sub_agente;
+    }
+
+    public String getRazon_social() {
+        return razon_social;
+    }
+
+    public void setRazon_social(String razon_social) {
+        this.razon_social = razon_social;
+    }
+
+    public String getDomicilio_comercial() {
+        return domicilio_comercial;
+    }
+
+    public void setDomicilio_comercial(String domicilio_comercial) {
+        this.domicilio_comercial = domicilio_comercial;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public String getNuevoTitular() {

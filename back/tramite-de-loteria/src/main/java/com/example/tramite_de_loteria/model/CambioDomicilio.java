@@ -16,9 +16,18 @@ public class CambioDomicilio {
         super();
     }
 
-    public CambioDomicilio(Integer id, Tramite tramite, String nuevoDomicilio, Integer nuevoDomicilioEstado, Integer superficie, Integer superficieEstado, String ubicacion, Integer ubicacionEstado, String vidriera, Integer vidrieraEstado, String nivelSocioeconomico, Integer nivelSocioeconomicoEstado, String mercadoZona, Integer mercadoZonaEstado, Integer recaudacionEstimada, Integer recaudacionEstimadaEstado, String direccion, Integer direccionEstado, String localidad, Integer localidadEstado, String departamento, Integer departamentoEstado) {
+    public CambioDomicilio(Integer id, Tramite tramite, Integer nro_seguimiento, String motivo, String localidad, Integer permiso, String agente, String sub_agente, String razon_social, String domicilio_comercial, String observaciones, String nuevoDomicilio, Integer nuevoDomicilioEstado, Integer superficie, Integer superficieEstado, String ubicacion, Integer ubicacionEstado, String vidriera, Integer vidrieraEstado, String nivelSocioeconomico, Integer nivelSocioeconomicoEstado, String mercadoZona, Integer mercadoZonaEstado, Integer recaudacionEstimada, Integer recaudacionEstimadaEstado, String direccion, Integer direccionEstado, String localidad_da, Integer localidadEstado, String departamento, Integer departamentoEstado) {
         this.id = id;
         this.tramite = tramite;
+        this.nro_seguimiento = nro_seguimiento;
+        this.motivo = motivo;
+        this.localidad = localidad;
+        this.permiso = permiso;
+        this.agente = agente;
+        this.sub_agente = sub_agente;
+        this.razon_social = razon_social;
+        this.domicilio_comercial = domicilio_comercial;
+        this.observaciones = observaciones;
         this.nuevoDomicilio = nuevoDomicilio;
         this.nuevoDomicilioEstado = nuevoDomicilioEstado;
         this.superficie = superficie;
@@ -35,7 +44,7 @@ public class CambioDomicilio {
         this.recaudacionEstimadaEstado = recaudacionEstimadaEstado;
         this.direccion = direccion;
         this.direccionEstado = direccionEstado;
-        this.localidad = localidad;
+        this.localidad_da = localidad_da;
         this.localidadEstado = localidadEstado;
         this.departamento = departamento;
         this.departamentoEstado = departamentoEstado;
@@ -49,6 +58,33 @@ public class CambioDomicilio {
     @ManyToOne
     @JoinColumn(name = "t_id")
     private Tramite tramite;
+
+    @Column(name = "t_nro_seguimiento")
+    private Integer nro_seguimiento;
+
+    @Column(name = "t_motivo")
+    private String motivo;
+
+    @Column(name = "t_localidad")
+    private String localidad;
+
+    @Column(name = "t_permiso")
+    private Integer permiso;
+
+    @Column(name = "t_agente")
+    private String agente;
+
+    @Column(name = "t_sub_agente")
+    private String sub_agente;
+
+    @Column(name = "t_razon_social")
+    private String razon_social;
+
+    @Column(name = "t_domicilio_comercial")
+    private String domicilio_comercial;
+
+    @Column(name = "t_observaciones")
+    private String observaciones;
 
     @Column(name = "cd_nuevo_domicilio")
     private String nuevoDomicilio;
@@ -99,7 +135,7 @@ public class CambioDomicilio {
     private Integer direccionEstado;
 
     @Column(name = "cd_DA_localidad")
-    private String localidad;
+    private String localidad_da;
 
     @Column(name = "cd_DA_localidad_e")
     private Integer localidadEstado;
@@ -124,6 +160,78 @@ public class CambioDomicilio {
 
     public void setTramite(Tramite tramite) {
         this.tramite = tramite;
+    }
+
+    public Integer getNro_seguimiento() {
+        return nro_seguimiento;
+    }
+
+    public void setNro_seguimiento(Integer nro_seguimiento) {
+        this.nro_seguimiento = nro_seguimiento;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public String getLocalidad() {
+        return localidad;
+    }
+
+    public void setLocalidad(String localidad) {
+        this.localidad = localidad;
+    }
+
+    public Integer getPermiso() {
+        return permiso;
+    }
+
+    public void setPermiso(Integer permiso) {
+        this.permiso = permiso;
+    }
+
+    public String getAgente() {
+        return agente;
+    }
+
+    public void setAgente(String agente) {
+        this.agente = agente;
+    }
+
+    public String getSub_agente() {
+        return sub_agente;
+    }
+
+    public void setSub_agente(String sub_agente) {
+        this.sub_agente = sub_agente;
+    }
+
+    public String getRazon_social() {
+        return razon_social;
+    }
+
+    public void setRazon_social(String razon_social) {
+        this.razon_social = razon_social;
+    }
+
+    public String getDomicilio_comercial() {
+        return domicilio_comercial;
+    }
+
+    public void setDomicilio_comercial(String domicilio_comercial) {
+        this.domicilio_comercial = domicilio_comercial;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public String getNuevoDomicilio() {
@@ -254,12 +362,12 @@ public class CambioDomicilio {
         this.direccionEstado = direccionEstado;
     }
 
-    public String getLocalidad() {
-        return localidad;
+    public String getLocalidadDa() {
+        return localidad_da;
     }
 
-    public void setLocalidad(String localidad) {
-        this.localidad = localidad;
+    public void setLocalidadDa(String localidad_da) {
+        this.localidad_da = localidad_da;
     }
 
     public Integer getLocalidadEstado() {
@@ -285,6 +393,5 @@ public class CambioDomicilio {
     public void setDepartamentoEstado(Integer departamentoEstado) {
         this.departamentoEstado = departamentoEstado;
     }
-
     
 }
