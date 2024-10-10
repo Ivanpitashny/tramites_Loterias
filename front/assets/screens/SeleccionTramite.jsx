@@ -14,7 +14,7 @@ const SeleccionTramite = ({navigation}) => {
             const decodedToken = jwtDecode(storedToken);
             //console.log('Token decodificado:', decodedToken);
     
-            // Extraer userId del token
+            // Extraer userId del token 
             const userId = decodedToken.userId; // Asegúrate de que el token tenga el campo userId
             if (userId) {
                 return userId;
@@ -31,7 +31,7 @@ const SeleccionTramite = ({navigation}) => {
         const usuarioId = await decodeToken();
         if (usuarioId) {
             if (id == 1){
-                navigation.navigate("Cambio",{tipo: 1});
+                navigation.navigate("CambioDomicilio1",{tipo: 1});
             }else{
                 navigation.navigate("CambioDeTitular1",{tipo: 2});
             }
