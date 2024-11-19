@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState,useEffect } from 'react'; 
 import { View, StyleSheet, Image, Text, SafeAreaView, Alert, Platform, Pressable, Keyboard } from 'react-native';
 import { TextInput, Button, IconButton, ActivityIndicator } from 'react-native-paper';
 import * as DocumentPicker from 'expo-document-picker';
@@ -8,19 +8,22 @@ import { KeyboardAvoidingView } from 'react-native';
 import { BASE_URL } from '../components/config';
 
 
-const CambioDeTitular1 = ({ navigation }) => {
-    const [step, setStep] = React.useState(1);
-    const [nombre, setNombre] = React.useState('');
-    const [identificacion, setIdentificacion] = React.useState('');
-    const [registroCivil, setRegistroCivil] = React.useState('');
-    const [file, setFile] = React.useState(null);
-    const [loading, setLoading] = React.useState(false);
-    const [customerNumber, setCustomerNumber] = React.useState('');
-    const [address, setAddress] = React.useState('');
-    const [personType, setPersonType] = React.useState('');
-    const [motive, setMotive] = React.useState('');
-    const [localidad, setLocalidad] = React.useState('');
-    const [userId, setUserId] = React.useState('');
+const CambioDeTitular1 = ({ navigation , route }) => {
+    const {tipoTramite} = route.params;
+    const {usuarioId} = route.params;
+    const [step, setStep] = useState(1);
+    const [nombre, setNombre] = useState('');
+    const [identificacion, setIdentificacion] = useState('');
+    const [registroCivil, setRegistroCivil] = useState('');
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [customerNumber, setCustomerNumber] = useState('');
+    const [address, setAddress] = useState('');
+    const [personType, setPersonType] = useState('');
+    const [motive, setMotive] = useState('');
+    const [localidad, setLocalidad] = useState('');
+    const [userId, setUserId] = useState('');
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const nextStep = () => {
         setStep(step + 1);
@@ -101,20 +104,110 @@ const CambioDeTitular1 = ({ navigation }) => {
         }
     };
 
-    const sendData = () => {
-        const data = {
-            nombreCompleto: nombre,           // Nombre completo
-            identificacion: identificacion,   // Número de identificación
-            registroCivil: registroCivil,     // Número de registro civil o tarjeta
-            archivo: file ? file.name : null, // Nombre del archivo seleccionado
-            customerNumber: customerNumber,   // Número de cliente o CUIT/CUIL
-            address: address,                 // Dirección
-            personType: personType,           // Tipo de persona (jurídica/persona)
-            motive: motive,                   // Motivo
-            // Puedes agregar aquí el userId si lo obtienes de AsyncStorage
-        };
-        navigation.navigate('HomeAgenciero');
-        console.log("Datos a enviar:", data);
+    const sendData = async () => {
+        try {
+            const token = await AsyncStorage.getItem('authToken');
+            if (!token) {
+                console.error('Token no encontrado');
+                return;
+            }
+    
+            const response = await fetch(`${BASE_URL}/v1/tramites`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    tipo: 'cambio_titular',
+                    estado: 'Iniciado',
+                    fechaInicio: new Date(),
+                    fechaFin: '',
+                    usuarioId: usuarioId,
+                }),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Respuesta completa del primer API:', data);
+    
+                // Asegúrate de que la respuesta tiene la estructura esperada
+                const tramiteResponse = data.tramiteResponse;
+                if (!tramiteResponse || !tramiteResponse.tramite || !Array.isArray(tramiteResponse.tramite)) {
+                    console.error('Estructura inesperada en la respuesta del primer API:', tramiteResponse);
+                    return;
+                }
+    
+                const tramite = tramiteResponse.tramite[0]?.tramite; // Accede al objeto tramite dentro del array
+                if (!tramite || !tramite.id) {
+                    console.error('El objeto tramite es nulo o no contiene un ID:', tramite);
+                    return;
+                }
+    
+                try {
+                    const secondToken = await AsyncStorage.getItem('authToken');
+                    if (!secondToken) {
+                        console.error('Token no válido o ausente en la segunda llamada');
+                        return;
+                    }
+    
+                    const secondResponse = await fetch(`${BASE_URL}/v1/cambioTitular`, {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${secondToken}`,
+                        },
+                        body: JSON.stringify({
+                            tramite: tramite.id, // Utiliza el ID del objeto tramite
+                            nro_seguimiento: '',
+                            motivo: motive,
+                            localidad: localidad,
+                            permiso: '',
+                            agente: '',
+                            subagente: '',
+                            razon_social: '',
+                            domicilio_comercial: address,
+                            nuevoTitular: nombre,
+                            nuevoTitularEstado: 0,
+                            dniNuevoTitular: registroCivil,
+                            dniNuevoTitularEstado: 0,
+                            certificadoConducta: '',
+                            certificadoConductaEstado: '',
+                            certificadoRegistroDeudores: '',
+                            certificadoRegistroDeudoresEstado: '',
+                            notaLibreDeuda: '',
+                            notaLibreDeudaEstado: '',
+                            contratoSocial: '',
+                            contratoSocialEstado: '',
+                            ObjetoSocial: '',
+                            objetoSocialEstado: '',
+                            cuentaBancaria: '',
+                            cuentaBancariaEstado: '',
+                        }),
+                    });
+    
+                    if (secondResponse.ok) {
+                        const secondData = await secondResponse.json();
+                        console.log('Respuesta de la segunda API:', secondData);
+                        navigation.navigate('HomeAgenciero');
+                    } else {
+                        console.error(
+                            'Error en la respuesta de la segunda API:',
+                            secondResponse.status,
+                            secondResponse.statusText
+                        );
+                    }
+                } catch (error) {
+                    console.error('Error en la segunda llamada a la API:', error);
+                }
+            } else {
+                console.error('Error en la respuesta del primer API:', response.status);
+            }
+        } catch (error) {
+            console.error('Error en la conexión con la primera API:', error);
+        }
     };
 
 
@@ -241,7 +334,7 @@ const CambioDeTitular1 = ({ navigation }) => {
                                 onPress={() => setPersonType('juridica')}
                                 buttonColor="#ff5a00"
                                 textColor="#fff"
-                                style={{ width: '45%' }}
+                                style={{ width: '35%' }}
                             >
                                 Juridica
                             </Button>
@@ -249,7 +342,7 @@ const CambioDeTitular1 = ({ navigation }) => {
                                 onPress={() => setPersonType('persona')}
                                 buttonColor="#ff5a00"
                                 textColor="#fff"
-                                style={{ width: '45%' }}
+                                style={{ width: '35%' }}
                             >
                                 Persona
                             </Button>
@@ -271,7 +364,7 @@ const CambioDeTitular1 = ({ navigation }) => {
                             onPress={sendData}
                             style={styles.button}
                             buttonColor="#ff5a00"
-                            textColor="#fff"
+                            textColor="black"
                         >
                             ENVIAR SOLICITUD
                         </Button>
@@ -424,6 +517,7 @@ const styles = StyleSheet.create({
         width: 300
     },
     radioContainer2: {
+        width:'100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 15,

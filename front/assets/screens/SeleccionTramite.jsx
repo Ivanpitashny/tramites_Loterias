@@ -4,7 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {jwtDecode} from 'jwt-decode';
 import { BASE_URL } from '../components/config';
 
-const SeleccionTramite = ({navigation}) => {
+const SeleccionTramite = ({navigation, route}) => {
+    const {usuarioId} = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [tramites, setTramites] = useState([]);
     
@@ -31,9 +32,9 @@ const SeleccionTramite = ({navigation}) => {
         const usuarioId = await decodeToken();
         if (usuarioId) {
             if (id == 1){
-                navigation.navigate("CambioDomicilio1",{tipo: 1});
+                navigation.navigate("CambioDomicilio1",{tipo: 1, usuarioId: usuarioId});
             }else{
-                navigation.navigate("CambioDeTitular1",{tipo: 2});
+                navigation.navigate("CambioDeTitular1",{tipo: 2, usuarioId: usuarioId});
             }
         } else {
             console.error('usuarioId no definido');

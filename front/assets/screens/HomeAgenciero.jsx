@@ -9,6 +9,7 @@ import { BASE_URL } from '../components/config';
 const HomeAgenciero = ({ navigation }) => {
     const [decodedToken, setDecodedToken] = useState(null);
     const [tramites, setTramites] = useState([]);
+    const [usuarioId, setUSuarioId] =useState('');
 
 
     const decodeToken = async () =>{
@@ -21,6 +22,7 @@ const HomeAgenciero = ({ navigation }) => {
             const userId = decodedToken.userId; // Asegúrate de que el token tenga el campo userId
             if (userId) {
                 await fetchData(userId); // Pasamos el userId correctamente a fetchData
+                setUSuarioId(userId);
             } else {
                 console.error('userId no encontrado en el token.');
             }
@@ -129,7 +131,7 @@ const HomeAgenciero = ({ navigation }) => {
             <Button
                 mode="contained"
                 style={styles.newTramiteButton}
-                onPress={() => navigation.navigate('SeleccionTramite')}
+                onPress={() => navigation.navigate('SeleccionTramite',{usuarioId : usuarioId})}
                 buttonColor="#ff5a00" 
                 textColor="#fff" 
             >

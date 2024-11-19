@@ -72,11 +72,11 @@ const Login = ({ navigation }) => {
 
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}
-    >
-      <Pressable style= {{flex:1}} onPress={() => Keyboard.dismiss()}>
+      // <KeyboardAvoidingView
+      //   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      //   style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}
+      // >
+      //   <Pressable style= {{flex:1}} onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Image 
             style={{borderRadius:20 ,width: width*0.5, height: height*0.25, margin: 20, justifyContent: 'center' }}
@@ -122,8 +122,8 @@ const Login = ({ navigation }) => {
             </Card.Content>
           </Card>
         </SafeAreaView>
-      </Pressable>
-    </KeyboardAvoidingView>
+    //   </Pressable>
+    // </KeyboardAvoidingView>
   );
 };
 
