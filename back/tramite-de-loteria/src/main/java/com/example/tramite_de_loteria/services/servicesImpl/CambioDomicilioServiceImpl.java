@@ -73,6 +73,34 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<CambioDomicilioResponseRest> obtenerCambioDomicilioPorTramite(Integer id) {
+        log.info("Inicio método obtenerCambioDomicilioPorId");
+        CambioDomicilioResponseRest response = new CambioDomicilioResponseRest();
+        List<CambioDomicilio> list = new ArrayList<>();
+        
+        try {
+            Optional<CambioDomicilio> cambioDomicilio = cambioDomicilioDao.findByTramiteId(id);
+            
+            if (cambioDomicilio.isPresent()) {
+                list.add(cambioDomicilio.get());
+                response.getCambioDomicilioResponse().setCambioDomicilio(list);
+                response.setMetada("Respuesta ok", "00", "Cambio de Domicilio encontrado");
+            } else {
+                log.error("Cambio de Domicilio no encontrado con T_ID: " + id);
+                response.setMetada("Respuesta nok", "-1", "Cambio de Domicilio no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.error("Error al obtener cambio de Domicilio por T_ID: ", e);
+            response.setMetada("Respuesta nok", "-1", "Error al obtener cambio de Domicilio");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
     @Transactional
     public ResponseEntity<CambioDomicilioResponseRest> crearCambioDomicilio(CambioDomicilio cambioDomicilio) {
         log.info("Inicio método crearCambioDomicilio");

@@ -15,4 +15,6 @@ public interface CambioTitularService {
     public ResponseEntity<CambioTitularResponseRest> actualizarCambioTitular(CambioTitular cambioTitular, Integer id);
 
     public ResponseEntity<CambioTitularResponseRest> eliminarCambioTitular(Integer id);
+
+    public ResponseEntity<CambioTitularResponseRest> obtenerCambioTitularPorTramite(Integer id);
 }

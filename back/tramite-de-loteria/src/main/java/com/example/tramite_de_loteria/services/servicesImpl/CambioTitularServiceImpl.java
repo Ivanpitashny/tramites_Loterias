@@ -71,6 +71,33 @@ public class CambioTitularServiceImpl implements CambioTitularService{
         
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<CambioTitularResponseRest> obtenerCambioTitularPorTramite(Integer id) {
+        log.info("Inicio método obtenerCambioTitularPorId");
+        CambioTitularResponseRest response = new CambioTitularResponseRest();
+        List<CambioTitular> list = new ArrayList<>();
+        
+        try {
+            Optional<CambioTitular> cambioTitular = cambioTitularDao.findByTramiteId(id);
+            
+            if (cambioTitular.isPresent()) {
+                list.add(cambioTitular.get());
+                response.getCambioTitularResponse().setCambioTitular(list);
+                response.setMetada("Respuesta ok", "00", "Cambio de titular encontrado");
+            } else {
+                log.error("Cambio de titular no encontrado con T_ID: " + id);
+                response.setMetada("Respuesta nok", "-1", "Cambio de titular no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.error("Error al obtener cambio de titular por T_ID: ", e);
+            response.setMetada("Respuesta nok", "-1", "Error al obtener cambio de titular");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @Override
     @Transactional

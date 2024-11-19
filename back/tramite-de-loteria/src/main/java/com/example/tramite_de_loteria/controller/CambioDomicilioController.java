@@ -40,6 +40,12 @@ public class CambioDomicilioController {
         return response;
     }
 
+        @GetMapping("/cambioDomicilio/tramite/{id}")
+    public ResponseEntity<CambioDomicilioResponseRest> obtenerCambioTitularPorTramiteId(@PathVariable Integer id){
+        ResponseEntity<CambioDomicilioResponseRest> response = cambioDomicilioServiceImpl.obtenerCambioDomicilioPorTramite(id);
+        return response;
+    }
+
     @PostMapping("/cambioDomicilio")
     public ResponseEntity<CambioDomicilioResponseRest> crearCambioDomicilio(@RequestBody CambioDomicilio request) {
         ResponseEntity<CambioDomicilioResponseRest> response = cambioDomicilioServiceImpl.crearCambioDomicilio(request);

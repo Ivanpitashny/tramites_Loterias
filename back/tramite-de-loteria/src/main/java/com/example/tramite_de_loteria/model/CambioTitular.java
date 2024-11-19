@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -54,35 +54,35 @@ public class CambioTitular {
     @Column(name = "ct_id")
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "t_id")
+    @OneToOne
+    @JoinColumn(name = "t_id",unique = true)
     private Tramite tramite;
 
     @Column(name = "t_nro_seguimiento")
     private Integer nro_seguimiento;
 
-    @Column(name = "t_motivo")
+    @Column(name = "ct_motivo")
     private String motivo;
 
-    @Column(name = "t_localidad")
+    @Column(name = "ct_localidad")
     private String localidad;
 
-    @Column(name = "t_permiso")
+    @Column(name = "ct_permiso")
     private Integer permiso;
 
-    @Column(name = "t_agente")
+    @Column(name = "ct_agente")
     private String agente;
 
-    @Column(name = "t_sub_agente")
+    @Column(name = "ct_sub_agente")
     private String sub_agente;
 
-    @Column(name = "t_razon_social")
+    @Column(name = "ct_razon_social")
     private String razon_social;
 
-    @Column(name = "t_domicilio_comercial")
+    @Column(name = "ct_domicilio_comercial")
     private String domicilio_comercial;
 
-    @Column(name = "t_observaciones")
+    @Column(name = "ct_observaciones")
     private String observaciones;
 
     @Column(name = "ct_nuevo_titular")

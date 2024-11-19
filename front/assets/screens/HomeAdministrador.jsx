@@ -66,7 +66,7 @@ const HomeAdministrador = ({ navigation }) => {
         <Text style={[styles.cell, { width: calculateColumnWidth(20) }]}>{item.id}</Text>
         <Text style={[styles.cell, { width: calculateColumnWidth(20) }]}>{item.fechaInicio}</Text>
         <Text style={[styles.cell, { width: calculateColumnWidth(20), backgroundColor: '#cfcfcf', borderRadius: 1000, backgroundColor: getColorByEstado(item.estado) }]}>{item.estado}</Text>
-        <TouchableOpacity style={styles.editButton} onPress={() => {item.tipo === "cambio_titular" ? navigation.navigate('RevisionTitular1', { tramiteId: item.id }):navigation.navigate('RevisionDomicilio1', { tramiteId: item.id }) }}>
+        <TouchableOpacity style={styles.editButton} onPress={() => {item.tipo === "cambio_titular" ? navigation.navigate('RevisionTitular1', { tramiteId: item.id , usuarioId: item.usuarioId}):navigation.navigate('RevisionDomicilio1', { tramiteId: item.id }) }}>
             <Text>✏️</Text>
         </TouchableOpacity>
         </View>

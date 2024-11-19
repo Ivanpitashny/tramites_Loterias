@@ -37,14 +37,11 @@ const Login = ({ navigation }) => {
        // Verificar si la respuesta es exitosa
        if (response.ok) {
         const data = await response.json();
-        // Limpiar el mensaje de error si la autenticación es exitosa
+
         setErrorMessage('');
-        // Guardar el token o redirigir al usuario a otra pantalla
-        //console.log('Success:', data.jwToken);
 
         await AsyncStorage.setItem('authToken', data.jwToken);
         const storedToken = await AsyncStorage.getItem('authToken');
-        //console.log('Token almacenado:', storedToken);
 
         try {
           const decodedToken = jwtDecode(storedToken);

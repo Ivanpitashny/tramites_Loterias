@@ -58,12 +58,14 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.DELETE, "/v1/tramites/**").hasRole("ADMINISTRADOR")
             // CAMBIO DOMICILIO
             .requestMatchers(HttpMethod.GET, "/v1/cambioDomicilio").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET, "/v1/cambioDomicilio/tramite/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.GET, "/v1/cambioDomicilio/**").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.PUT, "/v1/cambioDomicilio/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.POST, "/v1/cambioDomicilio").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.DELETE, "/v1/cambioDomicilio/**").hasRole("ADMINISTRADOR")
             // CAMBIO TITULAR
             .requestMatchers(HttpMethod.GET, "/v1/cambioTitular").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET, "/v1/cambioTitular/tramite/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.GET, "/v1/cambioTitular/**").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.PUT, "/v1/cambioTitular/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.POST, "/v1/cambioTitular").hasAnyRole("AGENCIERO","ADMINISTRADOR")

@@ -39,6 +39,12 @@ public class CambioTiularController {
         return response;
     }
 
+    @GetMapping("/cambioTitular/tramite/{id}")
+    public ResponseEntity<CambioTitularResponseRest> obtenerCambioTitularPorTramiteId(@PathVariable Integer id){
+        ResponseEntity<CambioTitularResponseRest> response = cambioTitularServiceImpl.obtenerCambioTitularPorTramite(id);
+        return response;
+    }
+
     @PostMapping("/cambioTitular")
     public ResponseEntity<CambioTitularResponseRest> crearCambioTitular(@RequestBody CambioTitular request) {
         ResponseEntity<CambioTitularResponseRest> response = cambioTitularServiceImpl.crearCambioTitular(request);

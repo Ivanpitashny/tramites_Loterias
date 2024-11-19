@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -55,35 +55,35 @@ public class CambioDomicilio {
     @Column(name = "cd_id")
     private Integer id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "t_id")
     private Tramite tramite;
 
-    @Column(name = "t_nro_seguimiento")
+    @Column(name = "cd_nro_seguimiento")
     private Integer nro_seguimiento;
 
-    @Column(name = "t_motivo")
+    @Column(name = "cd_motivo")
     private String motivo;
 
-    @Column(name = "t_localidad")
+    @Column(name = "cd_localidad")
     private String localidad;
 
-    @Column(name = "t_permiso")
+    @Column(name = "cd_permiso")
     private Integer permiso;
 
-    @Column(name = "t_agente")
+    @Column(name = "cd_agente")
     private String agente;
 
-    @Column(name = "t_sub_agente")
+    @Column(name = "cd_sub_agente")
     private String sub_agente;
 
-    @Column(name = "t_razon_social")
+    @Column(name = "cd_razon_social")
     private String razon_social;
 
-    @Column(name = "t_domicilio_comercial")
+    @Column(name = "cd_domicilio_comercial")
     private String domicilio_comercial;
 
-    @Column(name = "t_observaciones")
+    @Column(name = "cd_observaciones")
     private String observaciones;
 
     @Column(name = "cd_nuevo_domicilio")

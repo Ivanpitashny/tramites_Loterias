@@ -15,4 +15,6 @@ public interface CambioDomicilioService {
     public ResponseEntity<CambioDomicilioResponseRest> actualizarCambioDomicilio(CambioDomicilio cambioDomicilio, Integer id);
 
     public ResponseEntity<CambioDomicilioResponseRest> eliminarCambioDomicilio(Integer id);
+
+    public ResponseEntity<CambioDomicilioResponseRest> obtenerCambioDomicilioPorTramite(Integer id);
 }
