@@ -10,6 +10,7 @@ const HomeAgenciero = ({ navigation }) => {
     const [decodedToken, setDecodedToken] = useState(null);
     const [tramites, setTramites] = useState([]);
     const [usuarioId, setUSuarioId] =useState('');
+    const [cantTramites, setCantTramites] = useState('');
 
 
     const decodeToken = async () =>{
@@ -48,6 +49,8 @@ const HomeAgenciero = ({ navigation }) => {
                 if (response.ok) {
                     const data = await response.json();
                     setTramites(data.tramiteResponse.tramite);
+                    const tramitesData = data.tramiteResponse.tramite;
+                    setCantTramites(tramitesData.lenght);
                     //console.log(data);
                 }else{
                     console.error('Error en la respuesta:', response.status);
@@ -122,7 +125,7 @@ const HomeAgenciero = ({ navigation }) => {
                 <FlatList
                     data={tramites}
                     renderItem={renderTramite}
-                    keyExtractor={item => item.id.toString()} // Asegúrate de que `item.id` es único y está presente
+                    keyExtractor={item => item.id.toString()} 
                     ListEmptyComponent={<Text>No hay trámites disponibles</Text>}
                 />
             </View>
@@ -134,6 +137,7 @@ const HomeAgenciero = ({ navigation }) => {
                 onPress={() => navigation.navigate('SeleccionTramite',{usuarioId : usuarioId})}
                 buttonColor="#ff5a00" 
                 textColor="#fff" 
+                disabled={tramites.length >= 2}
             >
                 INICIAR NUEVO TRÁMITE
             </Button>

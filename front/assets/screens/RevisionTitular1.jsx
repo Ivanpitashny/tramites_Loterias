@@ -187,8 +187,7 @@ const RevisionTitular1 = ({navigation,route}) => {
                 </View>
                     {/* Body */}
                     <View style={styles.body}>
-                        <Text style={styles.tramiteText}>Trámite N° A000-9000694 - Cambio Titular</Text>
-                        <Text style={styles.nombreText}>Lautaro Cotz</Text>
+                        <Text style={styles.tramiteText}>Trámite N° {tramiteId} - {tipo === 'cambio_titular' ? 'Cambio Titular' : 'Cambio Domicilio'}</Text>
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>Nombre Completo</Text>
                             <Text style={styles.value}>{nombreCompleto ? (
@@ -218,7 +217,7 @@ const RevisionTitular1 = ({navigation,route}) => {
                                         {registro}
                                     </Text>
                                 ) : (
-                                    <Text>Cargando Permiso...</Text>
+                                    <Text>Cargando Registro...</Text>
                                 )}</Text>
                             <Switch value={registroSwitch} onValueChange={toggleRegistro} style={styles.switch}/>
                         </View>

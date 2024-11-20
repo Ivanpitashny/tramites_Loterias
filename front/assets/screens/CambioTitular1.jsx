@@ -36,11 +36,9 @@ const CambioDeTitular1 = ({ navigation , route }) => {
     const decodeToken = async () => {
         try {
             const storedToken = await AsyncStorage.getItem('authToken');
-            const decodedToken = jwtDecode(storedToken);
-            //console.log('Token decodificado:', decodedToken);
-
-            // Extraer userId del token
-            const userId = decodedToken.userId; // Asegúrate de que el token tenga el campo userId
+            const decodedToken = jwtDecode(storedToken);            
+            
+            const userId = decodedToken.userId; 
             if (userId) {
                 setUserId(userId);
             } else {
@@ -107,108 +105,98 @@ const CambioDeTitular1 = ({ navigation , route }) => {
     const sendData = async () => {
         try {
             const token = await AsyncStorage.getItem('authToken');
-            if (!token) {
-                console.error('Token no encontrado');
-                return;
-            }
+            if (token !== null) {
+                const response = await fetch(`${BASE_URL}/v1/tramites`, {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        tipo: 'cambio_titular',
+                        estado: 'Iniciado',
+                        fechaInicio: new Date(),
+                        fechaFin: '',
+                        usuarioId: usuarioId,
+                    }),
+                });
     
-            const response = await fetch(`${BASE_URL}/v1/tramites`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    tipo: 'cambio_titular',
-                    estado: 'Iniciado',
-                    fechaInicio: new Date(),
-                    fechaFin: '',
-                    usuarioId: usuarioId,
-                }),
-            });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Datos recibidos del primer API:', JSON.stringify(data, null, 2));
     
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Respuesta completa del primer API:', data);
-    
-                // Asegúrate de que la respuesta tiene la estructura esperada
-                const tramiteResponse = data.tramiteResponse;
-                if (!tramiteResponse || !tramiteResponse.tramite || !Array.isArray(tramiteResponse.tramite)) {
-                    console.error('Estructura inesperada en la respuesta del primer API:', tramiteResponse);
-                    return;
-                }
-    
-                const tramite = tramiteResponse.tramite[0]?.tramite; // Accede al objeto tramite dentro del array
-                if (!tramite || !tramite.id) {
-                    console.error('El objeto tramite es nulo o no contiene un ID:', tramite);
-                    return;
-                }
-    
-                try {
-                    const secondToken = await AsyncStorage.getItem('authToken');
-                    if (!secondToken) {
-                        console.error('Token no válido o ausente en la segunda llamada');
+                    // Actualización para la nueva estructura de respuesta
+                    const tramite = data.tramiteResponse?.tramite?.[0];
+                    if (!tramite || !tramite.id) {
+                        console.error('El objeto tramite es nulo o no contiene un ID:', tramite);
                         return;
                     }
     
-                    const secondResponse = await fetch(`${BASE_URL}/v1/cambioTitular`, {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${secondToken}`,
-                        },
-                        body: JSON.stringify({
-                            tramite: tramite.id, // Utiliza el ID del objeto tramite
-                            nro_seguimiento: '',
-                            motivo: motive,
-                            localidad: localidad,
-                            permiso: '',
-                            agente: '',
-                            subagente: '',
-                            razon_social: '',
-                            domicilio_comercial: address,
-                            nuevoTitular: nombre,
-                            nuevoTitularEstado: 0,
-                            dniNuevoTitular: registroCivil,
-                            dniNuevoTitularEstado: 0,
-                            certificadoConducta: '',
-                            certificadoConductaEstado: '',
-                            certificadoRegistroDeudores: '',
-                            certificadoRegistroDeudoresEstado: '',
-                            notaLibreDeuda: '',
-                            notaLibreDeudaEstado: '',
-                            contratoSocial: '',
-                            contratoSocialEstado: '',
-                            ObjetoSocial: '',
-                            objetoSocialEstado: '',
-                            cuentaBancaria: '',
-                            cuentaBancariaEstado: '',
-                        }),
-                    });
+                    console.log('ID de tramite obtenido:', tramite.id);
     
-                    if (secondResponse.ok) {
-                        const secondData = await secondResponse.json();
-                        console.log('Respuesta de la segunda API:', secondData);
-                        navigation.navigate('HomeAgenciero');
-                    } else {
-                        console.error(
-                            'Error en la respuesta de la segunda API:',
-                            secondResponse.status,
-                            secondResponse.statusText
-                        );
+                    // Segunda llamada
+                    try {
+                        const token = await AsyncStorage.getItem('authToken');
+                        const secondResponse = await fetch(`${BASE_URL}/v1/cambioTitular`, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({
+                                tramite: tramite.id, // ID del tramite
+                                nro_seguimiento: '',
+                                motivo: motive,
+                                localidad: localidad,
+                                permiso: '',
+                                agente: '',
+                                subagente: '',
+                                razon_social: '',
+                                domicilio_comercial: address,
+                                nuevoTitular: nombre,
+                                nuevoTitularEstado: 0,
+                                dniNuevoTitular: registroCivil,
+                                dniNuevoTitularEstado: 0,
+                                certificadoConducta: '',
+                                certificadoConductaEstado: '',
+                                certificadoRegistroDeudores: '',
+                                certificadoRegistroDeudoresEstado: '',
+                                notaLibreDeuda: '',
+                                notaLibreDeudaEstado: '',
+                                contratoSocial: '',
+                                contratoSocialEstado: '',
+                                objetoSocial: '',
+                                objetoSocialEstado: '',
+                                cuentaBancaria: '',
+                                cuentaBancariaEstado: '',
+                            }),
+                        });
+    
+                        if (secondResponse.ok) {
+                            const secondData = await secondResponse.json();
+                            navigation.navigate('HomeAgenciero');
+                            console.log('Respuesta de la segunda API:', secondData);
+                        } else {
+                            console.error('Error en la respuesta de la segunda API:', secondResponse.status);
+                        }
+                    } catch (error) {
+                        console.error('Error en la segunda llamada a la API:', error);
                     }
-                } catch (error) {
-                    console.error('Error en la segunda llamada a la API:', error);
+                } else {
+                    console.error('Error en la respuesta del primer API:', response.status);
                 }
             } else {
-                console.error('Error en la respuesta del primer API:', response.status);
+                console.log('Token no encontrado');
             }
         } catch (error) {
             console.error('Error en la conexión con la primera API:', error);
+            setErrorMessage('Error en la conexión con el servidor.');
         }
     };
+    
+
 
 
     switch (step) {
