@@ -136,7 +136,6 @@ public class CambioDomicilioServiceImpl implements CambioDomicilioService {
                 cambioDomicilioActualizado.setNro_seguimiento(cambioDomicilio.getNro_seguimiento());
                 cambioDomicilioActualizado.setMotivo(cambioDomicilio.getMotivo());
                 cambioDomicilioActualizado.setLocalidad(cambioDomicilio.getLocalidad());
-                cambioDomicilioActualizado.setPermiso(cambioDomicilio.getPermiso());
                 cambioDomicilioActualizado.setAgente(cambioDomicilio.getAgente());
                 cambioDomicilioActualizado.setSub_agente(cambioDomicilio.getSub_agente());
                 cambioDomicilioActualizado.setRazon_social(cambioDomicilio.getRazon_social());

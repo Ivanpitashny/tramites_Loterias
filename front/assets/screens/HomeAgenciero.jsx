@@ -10,8 +10,8 @@ const HomeAgenciero = ({ navigation }) => {
     const [decodedToken, setDecodedToken] = useState(null);
     const [tramites, setTramites] = useState([]);
     const [usuarioId, setUSuarioId] =useState('');
-    const [cantTramites, setCantTramites] = useState('');
-
+    const [cantTramites, setCantTramites] = useState(0);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const decodeToken = async () =>{
         try {
@@ -48,10 +48,13 @@ const HomeAgenciero = ({ navigation }) => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    setTramites(data.tramiteResponse.tramite);
-                    const tramitesData = data.tramiteResponse.tramite;
-                    setCantTramites(tramitesData.lenght);
-                    //console.log(data);
+                    if (data.tramiteResponse && Array.isArray(data.tramiteResponse.tramite)) {
+                        setTramites(data.tramiteResponse.tramite);
+                        setCantTramites(data.tramiteResponse.tramite.length);
+                    } else {
+                        setTramites([]); 
+                        setCantTramites(0);
+                    }
                 }else{
                     console.error('Error en la respuesta:', response.status);
                     console.error('Respuesta del servidor:', response);

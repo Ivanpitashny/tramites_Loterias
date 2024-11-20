@@ -44,8 +44,8 @@ public class ConfigSecurity {
         http.authorizeHttpRequests( configure -> {
             configure
             // USUARIOS
-            .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.GET,"/v1/usuarios/**").hasRole("ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET, "/v1/usuarios").hasAnyRole("AGENCIERO","ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET,"/v1/usuarios/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.POST,"/v1/usuarios").hasRole("ADMINISTRADOR") 
             .requestMatchers(HttpMethod.PUT,"/v1/usuarios/**").hasRole("ADMINISTRADOR")      
             .requestMatchers(HttpMethod.DELETE,"/v1/usuarios/**").hasRole("ADMINISTRADOR")  

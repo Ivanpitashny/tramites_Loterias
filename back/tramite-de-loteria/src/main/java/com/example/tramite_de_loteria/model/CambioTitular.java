@@ -17,13 +17,12 @@ public class CambioTitular {
         super();
     }
 
-    public CambioTitular(Integer id, Tramite tramite,  Integer nro_seguimiento, String motivo, String localidad, Integer permiso, String agente, String sub_agente, String razon_social, String domicilio_comercial, String observaciones, String nuevoTitular, Integer nuevoTitularEstado, String dniNuevoTitular, Integer dniNuevoTitularEstado, String certificadoConducta, Integer certificadoConductaEstado, String certificadoRegistroDeudores, Integer certificadoRegistroDeudoresEstado, String notaLibreDeuda, Integer notaLibreDeudaEstado, String contratoSocial, Integer contratoSocialEstado, String estatuto, Integer estatutoEstado, String objetoSocial, Integer objetoSocialEstado, String cuentaBancaria, Integer cuentaBancariaEstado){
+    public CambioTitular(Integer id, Tramite tramite,  Integer nro_seguimiento, String motivo, String localidad, String agente, String sub_agente, String razon_social, String domicilio_comercial, String observaciones, String nuevoTitular, Integer nuevoTitularEstado, String dniNuevoTitular, Integer dniNuevoTitularEstado, String certificadoConducta, Integer certificadoConductaEstado, String certificadoRegistroDeudores, Integer certificadoRegistroDeudoresEstado, String notaLibreDeuda, Integer notaLibreDeudaEstado, String contratoSocial, Integer contratoSocialEstado, String estatuto, Integer estatutoEstado, String objetoSocial, Integer objetoSocialEstado, String cuentaBancaria, Integer cuentaBancariaEstado){
         this.id = id;
         this.tramite = tramite;
         this.nro_seguimiento = nro_seguimiento;
         this.motivo = motivo;
         this.localidad = localidad;
-        this.permiso = permiso;
         this.agente = agente;
         this.sub_agente = sub_agente;
         this.razon_social = razon_social;
@@ -66,9 +65,6 @@ public class CambioTitular {
 
     @Column(name = "ct_localidad")
     private String localidad;
-
-    @Column(name = "ct_permiso")
-    private Integer permiso;
 
     @Column(name = "ct_agente")
     private String agente;
@@ -177,14 +173,6 @@ public class CambioTitular {
 
     public void setLocalidad(String localidad) {
         this.localidad = localidad;
-    }
-
-    public Integer getPermiso() {
-        return permiso;
-    }
-
-    public void setPermiso(Integer permiso) {
-        this.permiso = permiso;
     }
 
     public String getAgente() {

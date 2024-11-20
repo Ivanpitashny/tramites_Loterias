@@ -135,7 +135,6 @@ public class CambioTitularServiceImpl implements CambioTitularService{
                 cambioTitularActualizado.setNro_seguimiento(cambioTitular.getNro_seguimiento());
                 cambioTitularActualizado.setMotivo(cambioTitular.getMotivo());
                 cambioTitularActualizado.setLocalidad(cambioTitular.getLocalidad());
-                cambioTitularActualizado.setPermiso(cambioTitular.getPermiso());
                 cambioTitularActualizado.setAgente(cambioTitular.getAgente());
                 cambioTitularActualizado.setSub_agente(cambioTitular.getSub_agente());
                 cambioTitularActualizado.setRazon_social(cambioTitular.getRazon_social());

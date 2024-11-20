@@ -146,11 +146,10 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                                 'Authorization': `Bearer ${token}`,
                             },
                             body: JSON.stringify({
-                                tramite: tramite.id, // ID del tramite
+                                tramite: { id: tramite.id },
                                 nro_seguimiento: '',
                                 motivo: motive,
                                 localidad: localidad,
-                                permiso: '',
                                 agente: '',
                                 subagente: '',
                                 razon_social: '',

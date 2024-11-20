@@ -79,11 +79,11 @@ const Login = ({ navigation }) => {
       //   <Pressable style= {{flex:1}} onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Image 
-            style={{borderRadius:20 ,width: width*0.5, height: height*0.25, margin: 20, justifyContent: 'center' }}
+            style={{borderRadius:20 ,width: 240, height: 240, margin: 20, justifyContent: 'center' }}
             source={require('../images/logo_loteria.jpg')}
           />
           <Text style={{ fontSize: 24,marginTop: 40, fontWeight: 'bold', marginBottom: 20 }}>Trámites Loteria</Text>
-          <Card style={{ padding: 16, height: height*0.3}}>
+          <Card style={{ padding: 16, height: 250}}>
             <Card.Content>
               <TextInput 
               label="Usuario" 

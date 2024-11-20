@@ -16,13 +16,12 @@ public class CambioDomicilio {
         super();
     }
 
-    public CambioDomicilio(Integer id, Tramite tramite, Integer nro_seguimiento, String motivo, String localidad, Integer permiso, String agente, String sub_agente, String razon_social, String domicilio_comercial, String observaciones, String nuevoDomicilio, Integer nuevoDomicilioEstado, Integer superficie, Integer superficieEstado, String ubicacion, Integer ubicacionEstado, String vidriera, Integer vidrieraEstado, String nivelSocioeconomico, Integer nivelSocioeconomicoEstado, String mercadoZona, Integer mercadoZonaEstado, Integer recaudacionEstimada, Integer recaudacionEstimadaEstado, String direccion, Integer direccionEstado, String localidad_da, Integer localidadEstado, String departamento, Integer departamentoEstado) {
+    public CambioDomicilio(Integer id, Tramite tramite, Integer nro_seguimiento, String motivo, String localidad, String agente, String sub_agente, String razon_social, String domicilio_comercial, String observaciones, String nuevoDomicilio, Integer nuevoDomicilioEstado, Integer superficie, Integer superficieEstado, String ubicacion, Integer ubicacionEstado, String vidriera, Integer vidrieraEstado, String nivelSocioeconomico, Integer nivelSocioeconomicoEstado, String mercadoZona, Integer mercadoZonaEstado, Integer recaudacionEstimada, Integer recaudacionEstimadaEstado, String direccion, Integer direccionEstado, String localidad_da, Integer localidadEstado, String departamento, Integer departamentoEstado) {
         this.id = id;
         this.tramite = tramite;
         this.nro_seguimiento = nro_seguimiento;
         this.motivo = motivo;
         this.localidad = localidad;
-        this.permiso = permiso;
         this.agente = agente;
         this.sub_agente = sub_agente;
         this.razon_social = razon_social;
@@ -67,9 +66,6 @@ public class CambioDomicilio {
 
     @Column(name = "cd_localidad")
     private String localidad;
-
-    @Column(name = "cd_permiso")
-    private Integer permiso;
 
     @Column(name = "cd_agente")
     private String agente;
@@ -184,14 +180,6 @@ public class CambioDomicilio {
 
     public void setLocalidad(String localidad) {
         this.localidad = localidad;
-    }
-
-    public Integer getPermiso() {
-        return permiso;
-    }
-
-    public void setPermiso(Integer permiso) {
-        this.permiso = permiso;
     }
 
     public String getAgente() {

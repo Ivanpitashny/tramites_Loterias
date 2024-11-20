@@ -32,7 +32,7 @@ const SeleccionTramite = ({navigation, route}) => {
         const usuarioId = await decodeToken();
         if (usuarioId) {
             if (id == 1){
-                navigation.navigate("CambioDomicilio1",{tipo: 1, usuarioId: usuarioId});
+                navigation.navigate("CambioDeDomicilio1",{tipo: 1, usuarioId: usuarioId});
             }else{
                 navigation.navigate("CambioDeTitular1",{tipo: 2, usuarioId: usuarioId});
             }
