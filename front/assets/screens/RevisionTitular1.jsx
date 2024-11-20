@@ -154,7 +154,7 @@ const RevisionTitular1 = ({navigation,route}) => {
                     const data = await response.json();
 
                     setErrorMessage('');
-                    navigation.navigate('HomeAdministrador');
+                    navigation.navigate('RevisionTitular2', { tramiteId });
                 }else{
                     console.error('Error en la respuesta:', response.status);
                 }
