@@ -66,25 +66,41 @@ const HomeAdministrador = ({ navigation }) => {
         <Text style={[styles.cell, { width: calculateColumnWidth(20) }]}>{item.id}</Text>
         <Text style={[styles.cell, { width: calculateColumnWidth(20) }]}>{item.fechaInicio}</Text>
         <Text style={[styles.cell, { width: calculateColumnWidth(20), backgroundColor: '#cfcfcf', borderRadius: 1000, backgroundColor: getColorByEstado(item.estado) }]}>{item.estado}</Text>
-        <TouchableOpacity style={styles.editButton} onPress={() => {item.tipo === "cambio_titular" ? navigation.navigate('RevisionTitular1', { tramiteId: item.id , usuarioId: item.usuarioId}):navigation.navigate('RevisionDomicilio1', { tramiteId: item.id }) }}>
+        <TouchableOpacity style={styles.editButton} onPress={() => handlePress(item, navigation)}>
             <Text>✏️</Text>
         </TouchableOpacity>
         </View>
     );
 
+    const handlePress = (item, navigation) => {
+        if (item.estado === "Iniciado") {
+            if (item.tipo === "cambio_titular") {
+                navigation.navigate('RevisionTitular1', { tramiteId: item.id, usuarioId: item.usuarioId });
+            } else {
+                navigation.navigate('RevisionDomicilio1', { tramiteId: item.id });
+            }
+        } else {
+            if (item.tipo === "cambio_titular") {
+                navigation.navigate('RevisionTitular2', { tramiteId: item.id, usuarioId: item.usuarioId });
+            } else {
+                navigation.navigate('RevisionDomicilio2', { tramiteId: item.id });
+            }
+        }
+    };
+
     const removeToken = async () => {
         try {
-          await AsyncStorage.removeItem('jwtToken');
-          setDecodedToken(null);
-          console.log('Token eliminado');
-          navigation.navigate('Login');
+            await AsyncStorage.removeItem('jwtToken');
+            setDecodedToken(null);
+            console.log('Token eliminado');
+            navigation.navigate('Login');
         } catch (e) {
-          console.log('Error al eliminar el token', e);
+            console.log('Error al eliminar el token', e);
         }
-      };
+    };
 
     const refreshData = async () => {
-        await fetchData(); // Refresca los trámites llamando nuevamente a decodeToken
+        await fetchData(); 
     };
 
     return (

@@ -10,6 +10,7 @@ import Cambio from './assets/screens/Cambio';
 import CambioDeTitular1 from './assets/screens/CambioTitular1';
 import CambioDomicilio1 from './assets/screens/CambioDomicilio1';
 import RevisionTitular1 from './assets/screens/RevisionTitular1';
+import RevisionTitular2 from './assets/screens/RevisionTitular2';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const AppNavigation = () => {
                 <Stack.Screen name="HomeAdministrador" component={HomeAdministrador} options={{ headerShown: false }} />
                 <Stack.Screen name="InicioTramites" component={InicioTramites} options={{ headerShown: false }} />
                 <Stack.Screen name="RevisionTitular1" component={RevisionTitular1} options={{ headerShown: false }} />
+                <Stack.Screen name="RevisionTitular2" component={RevisionTitular2} options={{ headerShown: false}}/>
                 <Stack.Screen name="CambioDeTitular1" component={CambioDeTitular1} options={{ headerShown: false }} />
                 <Stack.Screen name="CambioDeDomicilio1" component={CambioDomicilio1} options={{ headerShown: false }} />
             </Stack.Navigator>

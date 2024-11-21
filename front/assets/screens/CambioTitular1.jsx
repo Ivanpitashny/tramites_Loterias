@@ -24,6 +24,7 @@ const CambioDeTitular1 = ({ navigation , route }) => {
     const [localidad, setLocalidad] = useState('');
     const [userId, setUserId] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
+    const [archivo,setArchivo] = useState([]);
 
     const nextStep = () => {
         setStep(step + 1);
@@ -64,45 +65,14 @@ const CambioDeTitular1 = ({ navigation , route }) => {
         }
     };
 
-    const insertData = async () => {
-        decodeToken();
-        if (!file) {
-            Alert.alert('No file selected', 'Please select a file first');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', {
-            uri: file.uri,
-            type: file.mimeType,
-            name: file.name,
-        });
-
-        try {
-            const response = await fetch(`${BASE_URL}/v1/tramites/`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    nombre,
-                    registroCivil,
-                    identificacion,
-                },
-            });
-
-            if (response.ok) {
-                Alert.alert('Success', 'Ingreso de datos Correcto');
-                nextStep(); // Avanzar al siguiente paso
-            } else {
-                Alert.alert('Error', 'File upload failed');
-            }
-        } catch (err) {
-            console.error(err);
-            Alert.alert('Error', 'An error occurred while uploading the file');
-        }
-    };
-
     const sendData = async () => {
+        // const formData = new FormData();
+        // formData.append('file', {
+        //     uri: file.uri,
+        //     type: file.mimeType,
+        //     name: file.name,
+        // });
+        // setArchivo(formData);
         try {
             const token = await AsyncStorage.getItem('authToken');
             if (token !== null) {
@@ -158,7 +128,7 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                                 nuevoTitularEstado: 0,
                                 dniNuevoTitular: registroCivil,
                                 dniNuevoTitularEstado: 0,
-                                certificadoConducta: '',
+                                certificadoConducta: file.name,
                                 certificadoConductaEstado: '',
                                 certificadoRegistroDeudores: '',
                                 certificadoRegistroDeudoresEstado: '',
@@ -166,8 +136,8 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                                 notaLibreDeudaEstado: '',
                                 contratoSocial: '',
                                 contratoSocialEstado: '',
-                                objetoSocial: '',
-                                objetoSocialEstado: '',
+                                objetoSocial: personType,
+                                objetoSocialEstado: 0,
                                 cuentaBancaria: '',
                                 cuentaBancariaEstado: '',
                             }),
@@ -370,6 +340,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     header: {
+        flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
     },
@@ -483,7 +454,7 @@ const styles = StyleSheet.create({
         right: 16,
     },
     container2: {
-        padding: 20,
+
         flex: 1
     },
     title2: {
