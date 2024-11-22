@@ -8,6 +8,7 @@ import { KeyboardAvoidingView } from 'react-native';
 import { BASE_URL } from '../components/config';
 
 const CambioTitular2 = ({route,navigation}) => {
+    const {tramiteId} = route.params;4
     const[motivo, setMotivo]= useState('');
     const[localidad, setLocalidad]= useState('');
     const[agente, setAgente]= useState('');
@@ -16,13 +17,18 @@ const CambioTitular2 = ({route,navigation}) => {
     const [personType, setPersonType] = useState('');
     const [contributionNumber, setContributionNumber] = useState('');
     const [motive, setMotive] = useState('');
-    const [file, setFile] = useState(null);
+    const [selladosFile, setSelladosFile] = useState(null);
+    const [dniFile, setDniFile] = useState(null);
+    const [conductaFile, setConductaFile] = useState(null);
+    const [deudoresFile, setDeudoresFile] = useState(null);
+    const [libreDeudaFile, setLibreDeudaFile] = useState(null);
+    const [examenFile, setExamenFile] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const sendData = ()=>{
         console.log('hola');
     }
-    const pickDocument = async () => {
+    const pickDocument = async (setFile) => {
         setLoading(true);
         try {
             const res = await DocumentPicker.getDocumentAsync({});
@@ -37,10 +43,7 @@ const CambioTitular2 = ({route,navigation}) => {
         }
     };
 return (
-    <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width:'100%' }}>
-        <Pressable onPress={() => Keyboard.dismiss()}>
+
             <SafeAreaView style={styles.container}>
                 {/* Logo y Título */}
                 <View style={styles.header}>
@@ -52,82 +55,81 @@ return (
                     <Text style={styles.title}>Inicio Tramite</Text>  
                 </View>
                 <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                            <IconButton icon="upload" size={30} onPress={() => pickDocument(setExamenFile)} />
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#0000ff" />
+                            ) : (
+                                <Button mode="text" onPress={() => pickDocument(setExamenFile)}>
+                                    {examenFile ? examenFile.name : 'Ingresar Examen'}
+                                </Button>
+                            )}
+                        </View>
+                <View style={styles.iconContainer}>
+                        <IconButton icon="upload" size={30} onPress={() => pickDocument(setSelladosFile)} />
                         {loading ? (
                             <ActivityIndicator size="small" color="#0000ff" />
                         ) : (
-                            <Button mode="text" onPress={pickDocument}>
-                                {file ? file.name : 'Sellados'}
+                            <Button mode="text" onPress={() => pickDocument(setSelladosFile)}>
+                                {selladosFile ? selladosFile.name : 'Sellados'}
                             </Button>
                         )}
                     </View>
                     <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        <IconButton icon="upload" size={30} onPress={() => pickDocument(setDniFile)} />
                         {loading ? (
                             <ActivityIndicator size="small" color="#0000ff" />
                         ) : (
-                            <Button mode="text" onPress={pickDocument}>
-                                {file ? file.name : 'DNI Nuevo Permisario'}
+                            <Button mode="text" onPress={() => pickDocument(setDniFile)}>
+                                {dniFile ? dniFile.name : 'DNI Nuevo Permisario'}
                             </Button>
                         )}
                     </View>
                     <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        <IconButton icon="upload" size={30} onPress={() => pickDocument(setConductaFile)} />
                         {loading ? (
                             <ActivityIndicator size="small" color="#0000ff" />
                         ) : (
-                            <Button mode="text" onPress={pickDocument}>
-                                {file ? file.name : 'Certificado de Conducta Titular Propuesta'}
+                            <Button mode="text" onPress={() => pickDocument(setConductaFile)}>
+                                {conductaFile ? conductaFile.name : 'Certificado de Conducta Titular Propuesta'}
                             </Button>
                         )}
                     </View>
                     <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        <IconButton icon="upload" size={30} onPress={() => pickDocument(setDeudoresFile)} />
                         {loading ? (
                             <ActivityIndicator size="small" color="#0000ff" />
                         ) : (
-                            <Button mode="text" onPress={pickDocument}>
+                            <Button mode="text" onPress={() => pickDocument(setDeudoresFile)}>
                                 <Text>
-                                    {file ? file.name : 'Certificado Negativo del Registro de Deudores alimentarios'}
+                                    {deudoresFile ? deudoresFile.name : 'Certificado Negativo del Registro de Deudores alimentarios'}
                                 </Text>
                             </Button>
                         )}
                     </View>
 
                     <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={pickDocument} />
+                        <IconButton icon="upload" size={30} onPress={() => pickDocument(setLibreDeudaFile)} />
                         {loading ? (
                             <ActivityIndicator size="small" color="#0000ff" />
                         ) : (
-                            <Button mode="text" onPress={pickDocument}>
-                                {file ? file.name : 'Nota Libre Deuda'}
+                            <Button mode="text" onPress={() => pickDocument(setLibreDeudaFile)}>
+                                {libreDeudaFile ? libreDeudaFile.name : 'Nota Libre Deuda'}
                             </Button>
                         )}
                     </View>
-                    <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={pickDocument} />
-                        {loading ? (
-                            <ActivityIndicator size="small" color="#0000ff" />
-                        ) : (
-                            <Button mode="text" onPress={pickDocument}>
-                                {file ? file.name : 'Imagen Interior Local'}
-                            </Button>
-                        )}
-                    </View>
-                <Button 
-                    mode="contained"
-                    title="ENVIAR SOLICITUD" 
-                    onPress={sendData()} 
-                    style={styles.newTramiteButton}
-                    buttonColor="#ff5a00" 
-                    textColor="#fff"  >
-                    ENVIAR SOLICITUD
-                </Button>
+                    <View style={styles.newTramiteButtonContainer}>
+                    <Pressable 
+                        style={styles.newTramiteButton} 
+                        onPress={sendData}
+                    >
+                        <Text style={styles.newTramiteButtonText}>ENVIAR SOLICITUD</Text>
+                    </Pressable>
+                </View>
+
                 {/* <Button title="ATRÁS" onPress={() => {}} color="#808080" /> */}
             </SafeAreaView>
-        </Pressable>
-    </KeyboardAvoidingView>
-);
+
+    );
 };
 const styles = StyleSheet.create({
     container: {
@@ -203,12 +205,24 @@ const styles = StyleSheet.create({
         flex: 0.5,
         alignItems: 'center',
     },
-    newTramiteButton: {
+    newTramiteButtonContainer: {
+        alignItems: 'center', // Centra el botón horizontalmente
         marginVertical: 20,
-        borderRadius: 25,
-        paddingVertical: 10,
-        marginBottom: 50,
     },
+    newTramiteButton: {
+        width: '80%', // Tamaño relativo al contenedor
+        height: 45,
+        justifyContent: 'center',
+        alignItems: 'center', // Centra el contenido del botón
+        borderRadius: 25,
+        backgroundColor: '#ff5a00',
+    },
+    newTramiteButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    
     logoutIcon: {
         position: 'absolute',
         top: 15,
