@@ -8,26 +8,123 @@ import { KeyboardAvoidingView } from 'react-native';
 import { BASE_URL } from '../components/config';
 
 const CambioTitular2 = ({route,navigation}) => {
-    const {tramiteId} = route.params;4
-    const[motivo, setMotivo]= useState('');
-    const[localidad, setLocalidad]= useState('');
-    const[agente, setAgente]= useState('');
-    const [customerNumber, setCustomerNumber] = useState('');
-    const [address, setAddress] = useState('');
-    const [personType, setPersonType] = useState('');
-    const [contributionNumber, setContributionNumber] = useState('');
-    const [motive, setMotive] = useState('');
-    const [selladosFile, setSelladosFile] = useState(null);
-    const [dniFile, setDniFile] = useState(null);
+    const {tramiteId} = route.params;
     const [conductaFile, setConductaFile] = useState(null);
     const [deudoresFile, setDeudoresFile] = useState(null);
     const [libreDeudaFile, setLibreDeudaFile] = useState(null);
-    const [examenFile, setExamenFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [tramite, setTramite] = useState([]);
 
-    const sendData = ()=>{
-        console.log('hola');
+    const fetchData = async () => {
+        try {
+            const token = await AsyncStorage.getItem('authToken');
+            const response = await fetch(`${BASE_URL}/v1/cambioTitular/tramite/${tramiteId}`, { //cambiar segun la ip de cada uno
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            }); 
+            if (response.ok) {
+                const data = await response.json();
+              
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            Alert.alert('Error', 'Failed to fetch data. Please try again later.');
+        }
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    
+    /**
+     * Función para enviar datos y archivo al servidor.
+     * @param {Object} file - El archivo a enviar (debe contener `uri`, `type` y `name`).
+     * @param {string} tipoArchivo - Tipo de archivo para clasificar en el servidor.
+     * @param {number} tramiteId - ID del trámite asociado al archivo.
+     */
+    const sendData = async (file, tipoArchivo) => {
+        
+        
+        try {
+            // Validar que todos los parámetros necesarios estén disponibles
+            if (!file || !file.uri || !file.mimeType || !file.name) {
+                throw new Error('El archivo no es válido. Asegúrate de que tenga uri, mimeType y name.');
+            }
+            if (!tipoArchivo || !tramiteId) {
+                throw new Error('Tipo de archivo o ID del trámite no especificado.');
+            }
+    
+            // Obtener el token de autenticación desde AsyncStorage
+            const token = await AsyncStorage.getItem('authToken');
+            if (!token) {
+                throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión nuevamente.');
+            }
+    
+            // Preparar los datos del formulario
+            const formData = new FormData();
+            formData.append('archivo', {
+                uri: file.uri,
+                type: file.mimeType,
+                name: file.name,
+            });
+            formData.append('tipoArchivo', tipoArchivo);
+    
+            // Hacer la solicitud al servidor
+            const response = await fetch(`${BASE_URL}/archivos/guardar/${tramiteId}`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: formData,
+            });
+    
+            // Procesar la respuesta
+            const responseData = await response.json();
+    
+            if (!response.ok) {
+                throw new Error(responseData.message || 'Error al enviar los datos al servidor.');
+            }
+    
+            // Mostrar mensaje de éxito al usuario
+            Alert.alert('Éxito', 'Archivo enviado correctamente.');
+            console.log('Respuesta del servidor:', responseData);
+    
+        } catch (error) {
+            console.error('Error enviando datos:', error.message);
+            Alert.alert('Error', `No se pudo enviar el archivo: ${error.message}`);
+        }
+    };
+    
+
+    const createFormData = () => {
+        const formData = new FormData();
+        if (conductaFile) {
+            appendFileToFormData(formData, conductaFile, 'conductaFile');
+        }
+        if (deudoresFile) {
+            appendFileToFormData(formData, deudoresFile, 'deudoresFile');
+        }
+        if (libreDeudaFile) {
+            appendFileToFormData(formData, libreDeudaFile, 'libreDeudaFile');
+        }
+        return formData;
     }
+
+    const appendFileToFormData = (formData, file, tipoArchivo) => {
+        formData.append('archivo', {
+            uri: file.uri,
+            type: file.type,
+            name: file.name,
+        });
+        formData.append('tipoArchivo', tipoArchivo);
+    }
+
+
     const pickDocument = async (setFile) => {
         setLoading(true);
         try {
@@ -43,7 +140,6 @@ const CambioTitular2 = ({route,navigation}) => {
         }
     };
 return (
-
             <SafeAreaView style={styles.container}>
                 {/* Logo y Título */}
                 <View style={styles.header}>
@@ -54,36 +150,6 @@ return (
                     />
                     <Text style={styles.title}>Inicio Tramite</Text>  
                 </View>
-                <View style={styles.iconContainer}>
-                            <IconButton icon="upload" size={30} onPress={() => pickDocument(setExamenFile)} />
-                            {loading ? (
-                                <ActivityIndicator size="small" color="#0000ff" />
-                            ) : (
-                                <Button mode="text" onPress={() => pickDocument(setExamenFile)}>
-                                    {examenFile ? examenFile.name : 'Ingresar Examen'}
-                                </Button>
-                            )}
-                        </View>
-                <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={() => pickDocument(setSelladosFile)} />
-                        {loading ? (
-                            <ActivityIndicator size="small" color="#0000ff" />
-                        ) : (
-                            <Button mode="text" onPress={() => pickDocument(setSelladosFile)}>
-                                {selladosFile ? selladosFile.name : 'Sellados'}
-                            </Button>
-                        )}
-                    </View>
-                    <View style={styles.iconContainer}>
-                        <IconButton icon="upload" size={30} onPress={() => pickDocument(setDniFile)} />
-                        {loading ? (
-                            <ActivityIndicator size="small" color="#0000ff" />
-                        ) : (
-                            <Button mode="text" onPress={() => pickDocument(setDniFile)}>
-                                {dniFile ? dniFile.name : 'DNI Nuevo Permisario'}
-                            </Button>
-                        )}
-                    </View>
                     <View style={styles.iconContainer}>
                         <IconButton icon="upload" size={30} onPress={() => pickDocument(setConductaFile)} />
                         {loading ? (
@@ -91,6 +157,11 @@ return (
                         ) : (
                             <Button mode="text" onPress={() => pickDocument(setConductaFile)}>
                                 {conductaFile ? conductaFile.name : 'Certificado de Conducta Titular Propuesta'}
+                            </Button>
+                        )}
+                        {conductaFile && (
+                            <Button mode="contained" onPress={() => sendData(conductaFile, 'conductaFile')}>
+                                Guardar
                             </Button>
                         )}
                     </View>
@@ -105,6 +176,11 @@ return (
                                 </Text>
                             </Button>
                         )}
+                        {deudoresFile && (
+                            <Button mode="contained" onPress={() => sendData(deudoresFile, 'deudoresFile')}>
+                                Guardar
+                            </Button>
+                        )}
                     </View>
 
                     <View style={styles.iconContainer}>
@@ -116,11 +192,20 @@ return (
                                 {libreDeudaFile ? libreDeudaFile.name : 'Nota Libre Deuda'}
                             </Button>
                         )}
+                        {libreDeudaFile && (
+                            <Button mode="contained" onPress={() => sendData(libreDeudaFile, 'libreDeudaFile')}>
+                                Guardar
+                            </Button>
+                        )}
                     </View>
                     <View style={styles.newTramiteButtonContainer}>
                     <Pressable 
                         style={styles.newTramiteButton} 
-                        onPress={sendData}
+                        onPress={() => {
+                            if (conductaFile) sendData(conductaFile, 'conductaFile');
+                            if (deudoresFile) sendData(deudoresFile, 'deudoresFile');
+                            if (libreDeudaFile) sendData(libreDeudaFile, 'libreDeudaFile');
+                        }}
                     >
                         <Text style={styles.newTramiteButtonText}>ENVIAR SOLICITUD</Text>
                     </Pressable>

@@ -2,6 +2,15 @@
 CREATE DATABASE IF NOT EXISTS tramite_de_loteria;
 
 USE tramite_de_loteria;
+DROP TABLE if EXISTS `historial_actividades`;
+DROP TABLE IF EXISTS `archivos_cambio_domicilio`;
+DROP TABLE IF EXISTS `archivos_cambio_titular`;
+DROP TABLE if EXISTS `cambio_titular`;
+DROP TABLE if EXISTS `cambio_domicilio`;
+DROP TABLE IF EXISTS `authorities`;
+DROP TABLE if EXISTS `tramite`;
+
+DROP TABLE IF EXISTS `users`; 
 
 CREATE TABLE `users` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -57,8 +66,6 @@ CREATE TABLE `cambio_titular` (
     `ct_nota_libre_deuda_e` TINYINT(1) DEFAULT 0,
     `ct_contrato_social` VARCHAR(255),
     `ct_contrato_social_e` TINYINT(1) DEFAULT 0,
-    `ct_estatuto` VARCHAR(255),
-    `ct_estatuto_e` TINYINT(1) DEFAULT 0,
     `ct_objeto_social` VARCHAR(255),
     `ct_objeto_social_e` TINYINT(1) DEFAULT 0,
     `ct_cuenta_bancaria` VARCHAR(255),
@@ -122,54 +129,54 @@ CREATE TABLE archivos_cambio_domicilio (
     FOREIGN KEY (cd_id) REFERENCES cambio_domicilio(cd_id)
 );
 
-CREATE TABLE archivos_cambio_titular (
-    archivo_id INT PRIMARY KEY AUTO_INCREMENT,
-    ct_id INT NOT NULL,
-    nombre_archivo VARCHAR(255) NOT NULL,
-    ruta_archivo VARCHAR(500) NOT NULL,
-    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ct_id) REFERENCES cambio_titular(ct_id)
-);
-
+CREATE TABLE `archivos_cambio_titular` (
+    `archivo_id` int NOT NULL AUTO_INCREMENT,
+    `ct_id` int NOT NULL,
+    `nombre_archivo` varchar(255) NOT NULL,
+    `tipo_archivo` varchar(255) NOT NULL,
+    `ruta_archivo` varchar(500) NOT NULL,
+    `datos_archivo` LONGBLOB NOT NULL,
+    `fecha_subida` datetime DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`archivo_id`),
+    KEY `ct_id` (`ct_id`),
+    CONSTRAINT `archivos_cambio_titular_ibfk_1` FOREIGN KEY (`ct_id`) REFERENCES `cambio_titular` (`ct_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+DROP PROCEDURE IF EXISTS subirArchivoCambioTitular;
 DELIMITER //
 
 CREATE PROCEDURE subirArchivoCambioTitular(
     IN p_ct_id INT,
     IN p_nombre_archivo VARCHAR(255),
     IN p_ruta_archivo VARCHAR(500),
-    IN p_tipo_archivo VARCHAR(50)
+    IN p_tipo_archivo VARCHAR(50),
+    IN p_datos_archivo LONGBLOB
 )
 BEGIN
     DECLARE v_archivo_id INT;
-    DECLARE v_column_name VARCHAR(255);
-    DECLARE v_sql VARCHAR(500);
-    
-    -- Asignar el nombre de la columna en base al tipo de archivo
-    CASE p_tipo_archivo
-        WHEN 'ct_certificado_conducta' THEN
-            SET v_column_name = 'ct_certificado_conducta';
-        WHEN 'ct_certificado_registro_deudores' THEN
-            SET v_column_name = 'ct_certificado_registro_deudores';
-        WHEN 'ct_nota_libre_deuda' THEN
-            SET v_column_name = 'ct_nota_libre_deuda';
-        -- Si se agregan más tipos, se pueden incluir aquí
-        ELSE
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo de archivo no válido';
-    END CASE;
-    
+
     -- Insertar el archivo en la tabla archivos_cambio_titular
-    INSERT INTO archivos_cambio_titular (ct_id, nombre_archivo, ruta_archivo)
-    VALUES (p_ct_id, p_nombre_archivo, p_ruta_archivo);
-    
+    INSERT INTO archivos_cambio_titular (ct_id, nombre_archivo, ruta_archivo, tipo_archivo, datos_archivo)
+    VALUES (p_ct_id, p_nombre_archivo, p_ruta_archivo, p_tipo_archivo, p_datos_archivo);
+
     -- Obtener el ID del archivo recién insertado
     SET v_archivo_id = LAST_INSERT_ID();
-    
-    -- Actualizar la tabla cambio_titular con el ID del archivo subido
-    SET v_sql = CONCAT('UPDATE cambio_titular SET ', v_column_name, ' = ? WHERE ct_id = ?');
-    PREPARE stmt FROM v_sql;
-    EXECUTE stmt USING v_archivo_id, p_ct_id;
-    DEALLOCATE PREPARE stmt;
-    
+
+    -- Actualizar la tabla cambio_titular según el tipo de archivo
+    IF p_tipo_archivo = 'ct_certificado_conducta' THEN
+        UPDATE cambio_titular
+        SET ct_certificado_conducta = v_archivo_id
+        WHERE ct_id = p_ct_id;
+    ELSEIF p_tipo_archivo = 'ct_certificado_registro_deudores' THEN
+        UPDATE cambio_titular
+        SET ct_certificado_registro_deudores = v_archivo_id
+        WHERE ct_id = p_ct_id;
+    ELSEIF p_tipo_archivo = 'ct_nota_libre_deuda' THEN
+        UPDATE cambio_titular
+        SET ct_nota_libre_deuda = v_archivo_id
+        WHERE ct_id = p_ct_id;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tipo de archivo no válido';
+    END IF;
 END //
 
 DELIMITER ;
@@ -178,7 +185,8 @@ CALL subirArchivoCambioTitular(
     1,  -- El ID de la fila en la tabla cambio_titular
     'certificado_conducta.pdf',  -- El nombre del archivo
     '/ruta/del/archivo/certificado_conducta.pdf',  -- La ruta del archivo en el servidor
-    'ct_certificado_conducta'  -- El tipo de archivo (puede ser 'ct_certificado_conducta', 'ct_certificado_registro_deudores', o 'ct_nota_libre_deuda')
+    'ct_certificado_conducta',  -- El tipo de archivo (puede ser 'ct_certificado_conducta', 'ct_certificado_registro_deudores', o 'ct_nota_libre_deuda')
+    "LOAD_FILE('/ruta/del/archivo/certificado_conducta.pdf')"  -- El contenido del archivo
 );
 
 
@@ -200,6 +208,6 @@ INSERT INTO `cambio_domicilio` (t_id, cd_motivo, cd_localidad, cd_razon_social, 
 VALUES 
 (57, 'Expansión de negocio', 'Ciudad A', 'Razón Social A', 'Domicilio A', 'Observaciones A', 'Nuevo Domicilio A', 0, 500, 1, 'Ubicación A', 1, 'Vidriera A', 1, 'Nivel Medio', 1, 'Mercado Zona A', 1, 15000, 1, 'Dirección A', 1, 'Localidad A', 0, 'Departamento A', 0);
 
-INSERT INTO `cambio_titular` (t_id, ct_motivo, ct_localidad, ct_razon_social, ct_domicilio_comercial, ct_observaciones, ct_nuevo_titular, ct_nuevo_titular_e, ct_dni_nuevo_titular, ct_dni_nuevo_titular_e, ct_certificado_conducta, ct_certificado_conducta_e, ct_certificado_registro_deudores, ct_certificado_registro_deudores_e, ct_nota_libre_deuda, ct_nota_libre_deuda_e, ct_contrato_social, ct_contrato_social_e, ct_estatuto, ct_estatuto_e, ct_objeto_social, ct_objeto_social_e, ct_cuenta_bancaria, ct_cuenta_bancaria_e)
+INSERT INTO `cambio_titular` (t_id, ct_motivo, ct_localidad, ct_razon_social, ct_domicilio_comercial, ct_observaciones, ct_nuevo_titular, ct_nuevo_titular_e, ct_dni_nuevo_titular, ct_dni_nuevo_titular_e, ct_certificado_conducta, ct_certificado_conducta_e, ct_certificado_registro_deudores, ct_certificado_registro_deudores_e, ct_nota_libre_deuda, ct_nota_libre_deuda_e, ct_contrato_social, ct_contrato_social_e, ct_objeto_social, ct_objeto_social_e, ct_cuenta_bancaria, ct_cuenta_bancaria_e)
 VALUES 
-(58, 'Cambio de titularidad por venta', 'Ciudad B', 'Razón Social B', 'Domicilio B', 'Observaciones B', 'Nuevo Titular B', 1, '12345678', 1, 'Certificado de conducta B', 1, 'Registro deudores B', 1, 'Nota Libre Deuda B', 1, 'Contrato Social B', 0, 'Estatuto B', 0, 'Objeto Social B', 0, 'Cuenta Bancaria B', 0);
+(58, 'Cambio de titularidad por venta', 'Ciudad B', 'Razón Social B', 'Domicilio B', 'Observaciones B', 'Nuevo Titular B', 1, '12345678', 1, 'Certificado de conducta B', 1, 'Registro deudores B', 1, 'Nota Libre Deuda B', 1, 'Contrato Social B', 0, 'Objeto Social B', 0, 'Cuenta Bancaria B', 0);

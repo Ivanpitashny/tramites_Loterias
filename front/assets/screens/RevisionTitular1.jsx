@@ -267,11 +267,6 @@ const RevisionTitular1 = ({ navigation, route }) => {
                 <Switch value={registroSwitch} onValueChange={toggleRegistro} />
             </View>
 
-            <View style={styles.item}>
-                <IconButton icon="download" size={40} onPress={handleDescargarExamen} />
-                <Text style={styles.itemDescription}>{certificadoConducta ? certificadoConducta : 'Cargando certificado...'}</Text>
-                <Switch value={certificadoConductaEstado} onValueChange={toggleCertificadoConductaEstado} />
-            </View>
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={handleRechazar}>

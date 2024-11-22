@@ -66,8 +66,6 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                     name: file.name,
                 });
                 setArchivo(formData);
-                console.log(formData);
-                console.log(archivo);
             }
         } catch (err) {
             console.error(err);
@@ -105,7 +103,6 @@ const CambioDeTitular1 = ({ navigation , route }) => {
     
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Datos recibidos del primer API:', JSON.stringify(data, null, 2));
     
                     // Actualización para la nueva estructura de respuesta
                     const tramite = data.tramiteResponse?.tramite?.[0];
@@ -113,8 +110,7 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                         console.error('El objeto tramite es nulo o no contiene un ID:', tramite);
                         return;
                     }
-    
-                    console.log('ID de tramite obtenido:', tramite.id);
+
     
                     // Segunda llamada
                     try {
@@ -154,7 +150,6 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                         if (secondResponse.ok) {
                             const secondData = await secondResponse.json();
                             navigation.navigate('HomeAgenciero');
-                            console.log('Respuesta de la segunda API:', secondData);
                         } else {
                             console.error('Error en la respuesta de la segunda API:', secondResponse.status);
                         }

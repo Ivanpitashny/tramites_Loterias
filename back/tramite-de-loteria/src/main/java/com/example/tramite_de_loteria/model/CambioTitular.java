@@ -40,8 +40,6 @@ public class CambioTitular {
         this.notaLibreDeudaEstado = notaLibreDeudaEstado;
         this.contratoSocial = contratoSocial;
         this.contratoSocialEstado = contratoSocialEstado;
-        this.estatuto = estatuto;
-        this.estatutoEstado = estatutoEstado;
         this.objetoSocial = objetoSocial;
         this.objetoSocialEstado = objetoSocialEstado;
         this.cuentaBancaria = cuentaBancaria;
@@ -116,12 +114,6 @@ public class CambioTitular {
 
     @Column(name = "ct_contrato_social_e")
     private Integer contratoSocialEstado;
-
-    @Column(name = "ct_estatuto")
-    private String estatuto;
-
-    @Column(name = "ct_estatuto_e")
-    private Integer estatutoEstado;
 
     @Column(name = "ct_objeto_social")
     private String objetoSocial;
@@ -309,22 +301,6 @@ public class CambioTitular {
 
     public void setContratoSocialEstado(Integer contratoSocialEstado) {
         this.contratoSocialEstado = contratoSocialEstado;
-    }
-
-    public String getEstatuto() {
-        return estatuto;
-    }
-
-    public void setEstatuto(String estatuto) {
-        this.estatuto = estatuto;
-    }
-
-    public Integer getEstatutoEstado() {
-        return estatutoEstado;
-    }
-
-    public void setEstatutoEstado(Integer estatutoEstado) {
-        this.estatutoEstado = estatutoEstado;
     }
 
     public String getObjetoSocial() {

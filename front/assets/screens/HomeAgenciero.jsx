@@ -48,8 +48,8 @@ const HomeAgenciero = ({ navigation }) => {
                     },
                 });
                 if (response.ok) {
-                    const data = await response.json();
-                    if (data.tramiteResponse && Array.isArray(data.tramiteResponse.tramite)) {
+                    const data = await response.json();                    
+                    if (data.tramiteResponse) {
                         setTramites(data.tramiteResponse.tramite);
                         setTramiteId(data.tramiteResponse.tramite.id)
                         setCantTramites(data.tramiteResponse.tramite.length);

@@ -99,6 +99,38 @@ const RevisionTitular2 = ({navigation,route}) => {
         }
     };
 
+    const handleDownload = async (tipoArchivo) => {
+        try {
+            const token = await AsyncStorage.getItem('authToken');
+            if (token !== null) {
+                const response = await fetch(`${BASE_URL}/archivos/descargar/${tramiteId}?tipoArchivo=${tipoArchivo}`, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = tipoArchivo;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } else {
+                    console.error('Error en la respuesta:', response.status);
+                }
+            } else {
+                console.log('token no encontrado');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     useEffect(()=>{
         fetchData();
     }, []); // Empty dependency array ensures fetchData is called only once on mount
@@ -157,6 +189,15 @@ const RevisionTitular2 = ({navigation,route}) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeAdministrador')}>
                     <Text style={styles.buttonText}>Siguiente</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => handleDownload('conductaFile')}>
+                    <Text style={styles.buttonText}>Descargar Conducta</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => handleDownload('deudoresFile')}>
+                    <Text style={styles.buttonText}>Descargar Deudores</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => handleDownload('libreDeudaFile')}>
+                    <Text style={styles.buttonText}>Descargar Libre Deuda</Text>
                 </TouchableOpacity>
             </View>
         </View>

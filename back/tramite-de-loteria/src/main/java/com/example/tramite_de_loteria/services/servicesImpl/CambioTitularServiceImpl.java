@@ -152,8 +152,6 @@ public class CambioTitularServiceImpl implements CambioTitularService{
                 cambioTitularActualizado.setNotaLibreDeudaEstado(cambioTitular.getNotaLibreDeudaEstado());
                 cambioTitularActualizado.setContratoSocial(cambioTitular.getContratoSocial());
                 cambioTitularActualizado.setContratoSocialEstado(cambioTitular.getContratoSocialEstado());
-                cambioTitularActualizado.setEstatuto(cambioTitular.getEstatuto());
-                cambioTitularActualizado.setEstatutoEstado(cambioTitular.getEstatutoEstado());
                 cambioTitularActualizado.setObjetoSocial(cambioTitular.getObjetoSocial());
                 cambioTitularActualizado.setObjetoSocialEstado(cambioTitular.getObjetoSocialEstado());
                 cambioTitularActualizado.setCuentaBancaria(cambioTitular.getCuentaBancaria());
