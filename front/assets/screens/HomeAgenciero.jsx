@@ -12,6 +12,7 @@ const HomeAgenciero = ({ navigation }) => {
     const [usuarioId, setUSuarioId] =useState('');
     const [cantTramites, setCantTramites] = useState(0);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [tramiteId, setTramiteId] = useState(null);
 
     const decodeToken = async () =>{
         try {
@@ -50,6 +51,7 @@ const HomeAgenciero = ({ navigation }) => {
                     const data = await response.json();
                     if (data.tramiteResponse && Array.isArray(data.tramiteResponse.tramite)) {
                         setTramites(data.tramiteResponse.tramite);
+                        setTramiteId(data.tramiteResponse.tramite.id)
                         setCantTramites(data.tramiteResponse.tramite.length);
                     } else {
                         setTramites([]); 
@@ -76,8 +78,20 @@ const HomeAgenciero = ({ navigation }) => {
             <Text style={styles.cell}>{item.id}</Text>
             <Text style={styles.cell}>{item.fechaInicio}</Text>
             <Text style={styles.cell}>{item.estado}</Text>
-            <TouchableOpacity style={styles.editButton}
-            onPress={()=> navigation.navigate('CambioTitular2',{tramiteId: id})}>
+            <TouchableOpacity 
+                style={styles.editButton}
+                onPress={() => {
+                    if (item.estado === 'Para Revisión') {
+                        if (item.tipo === 'cambio_titular') {
+                            navigation.navigate('CambioDeTitular2', { tramiteId: item.id });
+                        } else {
+                            navigation.navigate('CambioDeDomicilio2', { tramiteId: item.id });
+                        }
+                    } else {
+                        alert('No se puede modificar el trámite todavía.');
+                    }
+                }}
+            >
                 <Text>✏️</Text>
             </TouchableOpacity>
         </View>

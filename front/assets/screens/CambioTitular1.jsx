@@ -25,6 +25,8 @@ const CambioDeTitular1 = ({ navigation , route }) => {
     const [userId, setUserId] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
     const [archivo,setArchivo] = useState([]);
+    const [razonSocial, setRazonSocial] = useState(null);
+    const [cuentaBancaria, setCuentaBancaria] = useState(null)
 
     const nextStep = () => {
         setStep(step + 1);
@@ -57,6 +59,15 @@ const CambioDeTitular1 = ({ navigation , route }) => {
             if (!res.canceled && res.assets && res.assets.length > 0) {
                 const file = res.assets[0];
                 setFile(file);
+                const formData = new FormData();
+                formData.append('file', {
+                    uri: file.uri,
+                    type: file.mimeType,
+                    name: file.name,
+                });
+                setArchivo(formData);
+                console.log(formData);
+                console.log(archivo);
             }
         } catch (err) {
             console.error(err);
@@ -117,29 +128,26 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                             },
                             body: JSON.stringify({
                                 tramite: { id: tramite.id },
-                                nro_seguimiento: '',
                                 motivo: motive,
                                 localidad: localidad,
-                                agente: '',
-                                subagente: '',
-                                razon_social: '',
+                                razon_social: razonSocial, 
                                 domicilio_comercial: address,
                                 nuevoTitular: nombre,
                                 nuevoTitularEstado: 0,
                                 dniNuevoTitular: registroCivil,
                                 dniNuevoTitularEstado: 0,
-                                certificadoConducta: file.name,
+                                certificadoConducta: '',// lo agrego en la otra pantalla
                                 certificadoConductaEstado: '',
-                                certificadoRegistroDeudores: '',
+                                certificadoRegistroDeudores: '',// otra pantalla
                                 certificadoRegistroDeudoresEstado: '',
-                                notaLibreDeuda: '',
+                                notaLibreDeuda: '',//otra pantalla
                                 notaLibreDeudaEstado: '',
-                                contratoSocial: '',
+                                contratoSocial: '',//que es?
                                 contratoSocialEstado: '',
-                                objetoSocial: personType,
+                                objetoSocial: personType,//
                                 objetoSocialEstado: 0,
-                                cuentaBancaria: '',
-                                cuentaBancariaEstado: '',
+                                cuentaBancaria: cuentaBancaria,
+                                cuentaBancariaEstado: 0,
                             }),
                         });
     
@@ -181,7 +189,7 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                     </View>
                     <View style={styles.form}>
                         <TextInput
-                            label="Nombre Completo"
+                            label="Nombre Completo Nuevo Titular"
                             value={nombre}
                             mode="outlined"
                             style={styles.input}
@@ -204,16 +212,23 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                             onChangeText={text => setRegistroCivil(text)}
                             activeOutlineColor="#ff5a00"
                         />
-                        <View style={styles.iconContainer}>
-                            <IconButton icon="upload" size={40} onPress={pickDocument} />
-                            {loading ? (
-                                <ActivityIndicator size="small" color="#0000ff" />
-                            ) : (
-                                <Button mode="text" onPress={pickDocument}>
-                                    {file ? file.name : 'Ingresar Examen'}
-                                </Button>
-                            )}
-                        </View>
+                        <TextInput
+                            label="Razon Social"
+                            value={razonSocial}
+                            mode="outlined"
+                            style={styles.input}
+                            onChangeText={text => setRazonSocial(text)}
+                            activeOutlineColor="#ff5a00"
+                        />
+                        <TextInput
+                            label="Cuenta Bancaria"
+                            value={cuentaBancaria}
+                            mode="outlined"
+                            style={styles.input}
+                            onChangeText={text => setCuentaBancaria(text)}
+                            activeOutlineColor="#ff5a00"
+                        />
+
                     </View>
 
                     <View style={styles.footer}>
@@ -227,7 +242,7 @@ const CambioDeTitular1 = ({ navigation , route }) => {
                         <Button
                             mode="contained"
                             onPress={() => {
-                                if (!nombre || !identificacion || !registroCivil || !file) {
+                                if (!nombre || !identificacion || !registroCivil || !razonSocial) {
                                     Alert.alert('Error', 'Por favor completa todos los campos y selecciona un archivo.');
                                     return;
                                 }

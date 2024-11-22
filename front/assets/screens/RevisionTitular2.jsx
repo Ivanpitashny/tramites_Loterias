@@ -15,6 +15,8 @@ const RevisionTitular2 = ({navigation,route}) => {
     const [switchDir, setSwitchDir] = useState(false);
     const [dni, setDni] = useState('');
     const [switchD, setSwitchD] = useState(false);
+    const [tramite, setTramite] = useState({});
+    const [idCambio, setIdCambio] = useState('');
 
     const onToggleOS = () => setSwitchOS(!switchOS);
     const onToggleL = () => setSwitchL(!switchL);
@@ -40,8 +42,13 @@ const RevisionTitular2 = ({navigation,route}) => {
                     
                     setDireccion(cambioTitular.domicilio_comercial);
                     setDni(cambioTitular.dniNuevoTitular);
+                    setSwitchD(cambioTitular.dniNuevoTitularEstado ? true : false)
                     setObjetoSocial(cambioTitular.objetoSocial);
+                    setSwitchOS(cambioTitular.objetoSocialEstado ? true : false);
                     setLocalidad(cambioTitular.localidad);
+                    setSwitchL(cambioTitular.localidadEstado ? true : false);
+                    setIdCambio(cambioTitular.id);
+                    setTramite(cambioTitular);
                 }else{
                     console.error('Error en la respuesta:', response.status);
                 }
@@ -53,9 +60,48 @@ const RevisionTitular2 = ({navigation,route}) => {
             setErrorMessage('Error en la conexión con el servidor.');
         }
     };
+
+    const handleUpdate = async () => {
+        try {
+            const token = await AsyncStorage.getItem('authToken');
+            if (token !== null) {
+                const response = await fetch(`${BASE_URL}/v1/cambioTitular/${idCambio}`, {
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        ...tramite,
+                        domicilio_comercial: direccion,
+                        dniNuevoTitular: dni,
+                        dniNuevoTitularEstado: switchD ? 1 : 0,
+                        objetoSocial: objetoSocial,
+                        objetoSocialEstado: switchOS ? 1 : 0,
+                        localidad: localidad,
+                        localidadEstado: switchL ? 1 : 0,
+                    }),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Update successful:', data);
+                    alert('Cambios Guardados Correctamente')
+                } else {
+                    console.error('Error en la respuesta:', response.status);
+                }
+            } else {
+                console.log('token no encontrado');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setErrorMessage('Error en la conexión con el servidor.');
+        }
+    };
+
     useEffect(()=>{
         fetchData();
-    });
+    }, []); // Empty dependency array ensures fetchData is called only once on mount
 
     return (
         <View style={styles.container}>
@@ -67,7 +113,7 @@ const RevisionTitular2 = ({navigation,route}) => {
                 <Text style={styles.title}>Revisión de Trámite</Text>
             </View>
             <Text style={styles.subtitle}>
-                Trámite N° A000-00000004 - <Text style={styles.link}>Cambio Titular</Text>
+                Trámite N° {idCambio} - <Text style={styles.link}>Cambio Titular</Text>
             </Text>
     
             <View style={styles.item}>
@@ -106,7 +152,10 @@ const RevisionTitular2 = ({navigation,route}) => {
                 <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
                     <Text style={styles.buttonText}>Atrás</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RevisionTitular3')}>
+                <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+                    <Text style={styles.buttonText}>Guardar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeAdministrador')}>
                     <Text style={styles.buttonText}>Siguiente</Text>
                 </TouchableOpacity>
             </View>
