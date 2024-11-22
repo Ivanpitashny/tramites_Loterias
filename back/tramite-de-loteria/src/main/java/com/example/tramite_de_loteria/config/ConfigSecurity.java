@@ -51,7 +51,7 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.DELETE,"/v1/usuarios/**").hasRole("ADMINISTRADOR")  
             // TRAMITES
             .requestMatchers(HttpMethod.GET, "/v1/tramites").hasRole("ADMINISTRADOR")
-            .requestMatchers(HttpMethod.GET, "/v1/tramites/*/usuarios").hasRole("AGENCIERO")
+            .requestMatchers(HttpMethod.GET, "/v1/tramites/*/usuarios").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.GET, "/v1/tramites/**").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.PUT, "/v1/tramites/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.POST, "/v1/tramites").hasAnyRole("AGENCIERO","ADMINISTRADOR")
