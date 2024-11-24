@@ -18,12 +18,10 @@ const HomeAgenciero = ({ navigation }) => {
         try {
             const storedToken = await AsyncStorage.getItem('authToken');
             const decodedToken = jwtDecode(storedToken);
-            //console.log('Token decodificado:', decodedToken);
-    
-            // Extraer userId del token
-            const userId = decodedToken.userId; // Asegúrate de que el token tenga el campo userId
+
+            const userId = decodedToken.userId; 
             if (userId) {
-                await fetchData(userId); // Pasamos el userId correctamente a fetchData
+                await fetchData(userId);
                 setUSuarioId(userId);
             } else {
                 console.error('userId no encontrado en el token.');
@@ -38,8 +36,7 @@ const HomeAgenciero = ({ navigation }) => {
             const token = await AsyncStorage.getItem('authToken');
             if (token !== null) {
                 const url = `${BASE_URL}/v1/tramites/${userId}/usuarios`;
-                //console.log(url);
-                const response = await fetch(url, { //cambiar segun la ip de cada uno
+                const response = await fetch(url, {
                     method: 'GET',
                     headers: {
                     Accept: 'application/json',
@@ -49,7 +46,7 @@ const HomeAgenciero = ({ navigation }) => {
                 });
                 if (response.ok) {
                     const data = await response.json();                    
-                    if (data.tramiteResponse) {
+                    if (data.tramiteResponse && data.tramiteResponse.tramite) {
                         setTramites(data.tramiteResponse.tramite);
                         setTramiteId(data.tramiteResponse.tramite.id)
                         setCantTramites(data.tramiteResponse.tramite.length);
@@ -87,8 +84,12 @@ const HomeAgenciero = ({ navigation }) => {
                         } else {
                             navigation.navigate('CambioDeDomicilio2', { tramiteId: item.id });
                         }
-                    } else {
-                        alert('No se puede modificar el trámite todavía.');
+                    } else if (item.estado === 'Iniciado') {
+                        if (item.tipo === 'cambio_titular') {
+                            navigation.navigate('CambioDeTitular1', { tramiteId: item.id });
+                        } else {
+                            navigation.navigate('CambioDeDomicilio1', { tramiteId: item.id, usuarioId: usuarioId });
+                        }
                     }
                 }}
             >

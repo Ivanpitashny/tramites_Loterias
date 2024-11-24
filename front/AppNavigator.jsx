@@ -12,6 +12,8 @@ import CambioTitular2 from './assets/screens/CambioTitular2';
 import CambioDomicilio1 from './assets/screens/CambioDomicilio1';
 import RevisionTitular1 from './assets/screens/RevisionTitular1';
 import RevisionTitular2 from './assets/screens/RevisionTitular2';
+import RevisionDomicilio1 from './assets/screens/RevisionDomicilio1';
+import CambioDomicilio2 from './assets/screens/CambioDomicilio2';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +31,8 @@ const AppNavigation = () => {
                 <Stack.Screen name="CambioDeTitular1" component={CambioDeTitular1} options={{ headerShown: false }} />
                 <Stack.Screen name="CambioDeTitular2" component={CambioTitular2} options={{ headerShown: false }} />
                 <Stack.Screen name="CambioDeDomicilio1" component={CambioDomicilio1} options={{ headerShown: false }} />
+                <Stack.Screen name="CambioDomicilio2" component={CambioDomicilio2} options={{ headerShown: false }} />
+                <Stack.Screen name="RevisionDomicilio1" component={RevisionDomicilio1} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

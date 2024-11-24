@@ -9,12 +9,13 @@ import { BASE_URL } from '../components/config';
 const CambioDomicilio1 = ({ navigation, route }) => {
     const {usuarioId} = route.params;
     const [step, setStep] = useState(1);
-    // const [permiso, setPermiso] = React.useState('');
+    // const [permiso, setPermiso] = React.useState('');\
+
+    const [motivo, setMotivo] = useState('');
     const [agente, setAgente] = useState('');
     const [subagente, setSubagente] =useState('');
     const [razonSocial, setRazonSocial] = useState('');
     const [dependencia, setDependencia] = useState('');
-    const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [userId, setUserId] = useState('');
 
@@ -79,17 +80,6 @@ const CambioDomicilio1 = ({ navigation, route }) => {
     }, [usuarioId]);
 
     const insertData = async () => {
-        if (!file) {
-            Alert.alert('No se ha seleccionado archivo', 'Por favor, seleccione un archivo primero');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', {
-            uri: file.uri,
-            type: file.mimeType,
-            name: file.name,
-        });
 
         try {
             const token = await AsyncStorage.getItem('authToken');
@@ -110,69 +100,68 @@ const CambioDomicilio1 = ({ navigation, route }) => {
                     }),
                 });
                 
-            }
-
-            if (response.ok) {
-                const data = await response.json();
-
-                const tramite = data.tramiteResponse?.tramite?.[0];
-                if(!tramite || !tramite.id) {
-                    console.error('El objeto tramite no tiene id o es nulo');
-                    return
-            }
-            
-            try {
-                const token = await AsyncStorage.getItem('authToken');
-                const segundaRespuesta =await fetch(`${BASE_URL}/v1/cambioDomicilio`, {
-                    method:'POST',
-                    headers:{
-                        Accept:'application/json',
-                        'Content-Type':'application/json',
-                        'Authorization':`Bearer ${token}`,
-                    },
-                    body:JSON.stringify({
-                        tramite: { id: tramite.id },
-                        nro_seguimiento: 12345, 
-                        motivo: "Cambio de domicilio",
-                        localidad: "Ciudad Ejemplo",
-                        agente: "",
-                        sub_agente: "",
-                        razon_social: razonSocial,
-                        domicilio_comercial: "Domicilio Comercial Ejemplo",
-                        observaciones: "Observaciones Ejemplo",
-                        nuevoDomicilio: "Nuevo Domicilio Ejemplo",
-                        nuevoDomicilioEstado: 0,
-                        superficie: '',
-                        superficieEstado: 0,
-                        ubicacion: "Ubicación Ejemplo",
-                        ubicacionEstado: 0,
-                        vidriera: "Vidriera Ejemplo",
-                        vidrieraEstado: 0,
-                        nivelSocioeconomico: "Alto",
-                        nivelSocioeconomicoEstado: 0,
-                        mercadoZona: "",
-                        mercadoZonaEstado: 0,
-                        recaudacionEstimada: '',
-                        recaudacionEstimadaEstado: 0,
-                        direccion: "",
-                        direccionEstado: 0,
-                        localidad_da: "",
-                        localidadEstado: 0,
-                        departamento: "",
-                        departamentoEstado: 0
-                }),
-            });
-            if (segundaRespuesta.ok) {
-                const dataDos = await segundaRespuesta.json();
-                navigation.navigate('HomeAgenciero');
-            }else{
-                console.error('Error en la segunda Respuesta');
                 
-            }
-
-            } catch (error) {
-                console.error('Error en la segunda llamada a la Api: ', error);
-                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    const tramite = data.tramiteResponse?.tramite?.[0];
+                    if(!tramite || !tramite.id) {
+                        console.error('El objeto tramite no tiene id o es nulo');
+                        return
+                    }
+                    
+                    try {
+                        const token = await AsyncStorage.getItem('authToken');
+                        const segundaRespuesta =await fetch(`${BASE_URL}/v1/cambioDomicilio`, {
+                            method:'POST',
+                            headers:{
+                                Accept:'application/json',
+                                'Content-Type':'application/json',
+                                'Authorization':`Bearer ${token}`,
+                            },
+                            body:JSON.stringify({
+                                tramite: { id: tramite.id },
+                                nro_seguimiento: 12345, 
+                                motivo: motivo,
+                                localidad: dependencia,
+                                agente: agente,
+                                sub_agente: subagente,
+                                razon_social: razonSocial,
+                                domicilio_comercial: "",
+                                observaciones: "",
+                                nuevoDomicilio: "",
+                                nuevoDomicilioEstado: 0,
+                                superficie: '',
+                                superficieEstado: 0,
+                                ubicacion: "",
+                                ubicacionEstado: 0,
+                                vidriera: "",
+                                vidrieraEstado: 0,
+                                nivelSocioeconomico: "",
+                                nivelSocioeconomicoEstado: 0,
+                                mercadoZona: "",
+                                mercadoZonaEstado: 0,
+                                recaudacionEstimada: '',
+                                recaudacionEstimadaEstado: 0,
+                                direccion: "",
+                                direccionEstado: 0,
+                                localidad_da: "",
+                                localidadEstado: 0,
+                                departamento: "",
+                                departamentoEstado: 0
+                            }),
+                        });
+                        if (segundaRespuesta.ok) {
+                            const dataDos = await segundaRespuesta.json();
+                            navigation.navigate('HomeAgenciero');
+                        }else{
+                            console.error('Error en la segunda Respuesta');
+                            
+                        }
+                        
+                    } catch (error) {
+                        console.error('Error en la segunda llamada a la Api: ', error);
+                    }
             }
         }
         } catch (err) {
@@ -226,16 +215,15 @@ const CambioDomicilio1 = ({ navigation, route }) => {
                             onChangeText={setDependencia}
                             activeOutlineColor="#ff5a00"
                         />
-                        <View style={styles.iconContainer}>
-                            <IconButton icon="upload" size={40} onPress={pickDocument} />
-                            {loading ? (
-                                <ActivityIndicator size="small" color="#0000ff" />
-                            ) : (
-                                <Button mode="text" onPress={pickDocument}>
-                                    {file ? file.name : 'Ingresar Documento'}
-                                </Button>
-                            )}
-                        </View>
+                        <TextInput
+                            label="Motivo"
+                            value={motivo}
+                            mode="outlined"
+                            multiline
+                            style={styles.input}
+                            onChangeText={setMotivo}
+                            activeOutlineColor="#ff5a00"
+                        />
                     </View>
 
                     <View style={styles.footer}>

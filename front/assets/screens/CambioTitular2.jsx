@@ -51,8 +51,8 @@ const CambioTitular2 = ({route,navigation}) => {
         
         try {
             // Validar que todos los parámetros necesarios estén disponibles
-            if (!file || !file.uri || !file.mimeType || !file.name) {
-                throw new Error('El archivo no es válido. Asegúrate de que tenga uri, mimeType y name.');
+            if (!file || !file.uri || !file.type || !file.name) {
+                throw new Error('El archivo no es válido. Asegúrate de que tenga uri, type y name.');
             }
             if (!tipoArchivo || !tramiteId) {
                 throw new Error('Tipo de archivo o ID del trámite no especificado.');
@@ -131,6 +131,7 @@ const CambioTitular2 = ({route,navigation}) => {
             const res = await DocumentPicker.getDocumentAsync({});
             if (!res.canceled && res.assets && res.assets.length > 0) {
                 const file = res.assets[0];
+                file.type = file.mimeType; // Ensure type is set
                 setFile(file);
             }
         } catch (err) {

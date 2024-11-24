@@ -71,7 +71,7 @@ public class ConfigSecurity {
             .requestMatchers(HttpMethod.POST, "/v1/cambioTitular").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(HttpMethod.DELETE, "/v1/cambioTitular/**").hasRole("ADMINISTRADOR")
             .requestMatchers(HttpMethod.POST, "/archivos/guardar/**").hasAnyRole("AGENCIERO", "ADMINISTRADOR")
-            .requestMatchers(HttpMethod.GET, "/archivos/descargar/**").hasAnyRole("AGENCIERO","ADMINISTRADOR")
+            .requestMatchers(HttpMethod.GET, "/archivos/descargar").hasAnyRole("AGENCIERO","ADMINISTRADOR")
             .requestMatchers(  "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/error").permitAll();
         })
         .addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class)
